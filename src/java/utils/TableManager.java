@@ -88,7 +88,7 @@ public class TableManager {
         sql.append(pk.name);
         sql.append(" ))");
 
-        //Logger.getLogger(TableManager.class.getName()).log(Level.INFO, sql.toString());
+        Logger.getLogger(TableManager.class.getName()).log(Level.INFO,"[Table Manager]:"+ sql.toString());
         Logger.getLogger(TableManager.class.getName()).log(Level.INFO, "[Table Manager]: Created table "+tableName);
         //System.out.println(sql.toString());
         st.executeUpdate(sql.toString());
