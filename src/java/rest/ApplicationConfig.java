@@ -29,8 +29,8 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(beans.DbResource.class);
         resources.add(rest.AuthResource.class);
+        resources.add(rest.DbResource.class);
     }
     
 }

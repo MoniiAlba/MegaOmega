@@ -67,5 +67,21 @@
         <delete dir="${build.generated.sources.dir}/jax-ws/authwsc"/>
         <delete dir="${build.generated.dir}/jax-wsCache/AuthService"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-AuthService"/>
+    <target name="wsimport-client-DataBaseService" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/DataBaseService"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/DataBaseService" destdir="${build.generated.dir}/jax-wsCache/DataBaseService" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/DataBaseService/wsdl/localhost_8080/DataBaseService/DataBaseService.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/DataBaseService/DataBaseService?wsdl" xnocompile="true" xendorsed="true" package="dbwsc">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/DataBaseService/wsdl/localhost_8080/DataBaseService/DataBaseService.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/DataBaseService"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/DataBaseService">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-DataBaseService" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/dbwsc"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/DataBaseService"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-AuthService, wsimport-client-DataBaseService"/>
 </project>
