@@ -24,50 +24,18 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _SignInUserResponse_QNAME = new QName("http://wssauth/", "signInUserResponse");
-    private final static QName _Hello_QNAME = new QName("http://wssauth/", "hello");
     private final static QName _CreateNewUser_QNAME = new QName("http://wssauth/", "createNewUser");
     private final static QName _CreateNewUserResponse_QNAME = new QName("http://wssauth/", "createNewUserResponse");
-    private final static QName _SignInUser_QNAME = new QName("http://wssauth/", "signInUser");
+    private final static QName _Hello_QNAME = new QName("http://wssauth/", "hello");
     private final static QName _HelloResponse_QNAME = new QName("http://wssauth/", "helloResponse");
+    private final static QName _SignInUser_QNAME = new QName("http://wssauth/", "signInUser");
+    private final static QName _SignInUserResponse_QNAME = new QName("http://wssauth/", "signInUserResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: authwsc
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link SignInUser }
-     * 
-     */
-    public SignInUser createSignInUser() {
-        return new SignInUser();
-    }
-
-    /**
-     * Create an instance of {@link HelloResponse }
-     * 
-     */
-    public HelloResponse createHelloResponse() {
-        return new HelloResponse();
-    }
-
-    /**
-     * Create an instance of {@link SignInUserResponse }
-     * 
-     */
-    public SignInUserResponse createSignInUserResponse() {
-        return new SignInUserResponse();
-    }
-
-    /**
-     * Create an instance of {@link Hello }
-     * 
-     */
-    public Hello createHello() {
-        return new Hello();
     }
 
     /**
@@ -87,29 +55,43 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Hello }
+     * 
+     */
+    public Hello createHello() {
+        return new Hello();
+    }
+
+    /**
+     * Create an instance of {@link HelloResponse }
+     * 
+     */
+    public HelloResponse createHelloResponse() {
+        return new HelloResponse();
+    }
+
+    /**
+     * Create an instance of {@link SignInUser }
+     * 
+     */
+    public SignInUser createSignInUser() {
+        return new SignInUser();
+    }
+
+    /**
+     * Create an instance of {@link SignInUserResponse }
+     * 
+     */
+    public SignInUserResponse createSignInUserResponse() {
+        return new SignInUserResponse();
+    }
+
+    /**
      * Create an instance of {@link User }
      * 
      */
     public User createUser() {
         return new User();
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SignInUserResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://wssauth/", name = "signInUserResponse")
-    public JAXBElement<SignInUserResponse> createSignInUserResponse(SignInUserResponse value) {
-        return new JAXBElement<SignInUserResponse>(_SignInUserResponse_QNAME, SignInUserResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Hello }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://wssauth/", name = "hello")
-    public JAXBElement<Hello> createHello(Hello value) {
-        return new JAXBElement<Hello>(_Hello_QNAME, Hello.class, null, value);
     }
 
     /**
@@ -131,12 +113,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link SignInUser }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link Hello }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://wssauth/", name = "signInUser")
-    public JAXBElement<SignInUser> createSignInUser(SignInUser value) {
-        return new JAXBElement<SignInUser>(_SignInUser_QNAME, SignInUser.class, null, value);
+    @XmlElementDecl(namespace = "http://wssauth/", name = "hello")
+    public JAXBElement<Hello> createHello(Hello value) {
+        return new JAXBElement<Hello>(_Hello_QNAME, Hello.class, null, value);
     }
 
     /**
@@ -146,6 +128,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://wssauth/", name = "helloResponse")
     public JAXBElement<HelloResponse> createHelloResponse(HelloResponse value) {
         return new JAXBElement<HelloResponse>(_HelloResponse_QNAME, HelloResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SignInUser }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://wssauth/", name = "signInUser")
+    public JAXBElement<SignInUser> createSignInUser(SignInUser value) {
+        return new JAXBElement<SignInUser>(_SignInUser_QNAME, SignInUser.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link SignInUserResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://wssauth/", name = "signInUserResponse")
+    public JAXBElement<SignInUserResponse> createSignInUserResponse(SignInUserResponse value) {
+        return new JAXBElement<SignInUserResponse>(_SignInUserResponse_QNAME, SignInUserResponse.class, null, value);
     }
 
 }

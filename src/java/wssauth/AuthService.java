@@ -55,7 +55,7 @@ public class AuthService {
             //db.createDb(dbName, userName, password);
         } catch (SQLException ex) {
             Logger.getLogger(AuthService.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("[Auth: ]" + ex);
+            System.out.println("[Auth]: " + ex);
         }
         finally{
             db.closeResources();
@@ -86,7 +86,7 @@ public class AuthService {
                 System.out.println("[Auth]: No matching user");
         } catch (SQLException ex) {
             Logger.getLogger(AuthService.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("[Auth: ]" + ex);
+            System.out.println("[Auth]: " + ex);
             //sSystem.out.println(ex);
         }
         catch(Exception e){

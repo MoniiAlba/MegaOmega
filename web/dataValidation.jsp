@@ -4,6 +4,9 @@
     Author     : soeur
 --%>
 
+<%@page import="org.json.simple.parser.JSONParser"%>
+<%@page import="org.json.simple.JSONObject"%>
+<%@page import="beans.RestClient"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -27,7 +30,7 @@
                 mySession.setAttribute("userName", userData.get("userName"));
                 mySession.setAttribute("dbName", userData.get("dbName"));
                 mySession.setMaxInactiveInterval(10);
-                response.sendRedirect("tables.jsp");
+                response.sendRedirect("Tables.jsp");
             }else{
                 if (password != null && userName != null) {
                     
@@ -40,7 +43,7 @@
                     mySession.setAttribute("userName", userData.get("userName"));
                     mySession.setAttribute("dbName", userData.get("dbName"));
                     mySession.setMaxInactiveInterval(10);
-                    response.sendRedirect("tables.jsp");
+                    response.sendRedirect("Tables.jsp");
                 } else {
                     out.println("<p> Sesión no iniciada </p>");
                     out.println("<a href='index.html'> Iniciar sesión </a>");

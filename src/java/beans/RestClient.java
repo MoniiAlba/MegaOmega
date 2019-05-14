@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 public class RestClient {
     private Client client;
     private WebTarget webtarget;
-    private static final String URI = "http://localhost:8080/Omega/webresources/";
+    private static final String URI = "http://localhost:8080/MegaOmega/webresources/";
     
     public RestClient(){
         client = javax.ws.rs.client.ClientBuilder.newClient();
