@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div>
+            <h1> DataWeb Wizard </h1>
+            <h3> Log in </h3>
+            <script>
+                function checkComplete(){
+                    var user = document.getElementById("uName").value;
+                    var pwd = document.getElementById("pwd").value;
+                    if(user != "" && pwd != ""){
+                       return true;
+                    }else{
+                        alert("Ingrese todos los datos");
+                        return false;
+                    }
+                }
+            </script>
+            
+            <form action="dataValidation.jsp" method="POST" onsubmit="return checkComplete()">
+                Usuario: <input id="uName" type="text" name="userName" value="" /> <br> <br>
+                Contraseña: <input id="pwd" type="password" name="password" value="" /> <br> <br>
+                <input type="submit" value="Log in" />
+            </form>
+            <br>
+            <a href="NewUser.jsp">Crear nuevo usuario</a>
+        </div>
+    </body>
+</html>
