@@ -4,6 +4,9 @@
     <service name="AuthService">
       <implementation-class>wssauth.AuthService</implementation-class>
     </service>
+    <service name="DataBaseService">
+      <implementation-class>wssdatabase.DataBaseService</implementation-class>
+    </service>
   </services>
   <clients>
     <client name="AuthService">
