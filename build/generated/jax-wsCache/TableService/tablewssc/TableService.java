@@ -29,6 +29,57 @@ public interface TableService {
      * @param password
      * @param dbName
      * @param userName
+     * @param tableName
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getFields", targetNamespace = "http://wsstable/", className = "tablewssc.GetFields")
+    @ResponseWrapper(localName = "getFieldsResponse", targetNamespace = "http://wsstable/", className = "tablewssc.GetFieldsResponse")
+    @Action(input = "http://wsstable/TableService/getFieldsRequest", output = "http://wsstable/TableService/getFieldsResponse")
+    public String getFields(
+        @WebParam(name = "dbName", targetNamespace = "")
+        String dbName,
+        @WebParam(name = "tableName", targetNamespace = "")
+        String tableName,
+        @WebParam(name = "userName", targetNamespace = "")
+        String userName,
+        @WebParam(name = "password", targetNamespace = "")
+        String password);
+
+    /**
+     * 
+     * @param password
+     * @param dbName
+     * @param userName
+     * @param tableName
+     * @param primaryKey
+     * @return
+     *     returns boolean
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "deleteRecord", targetNamespace = "http://wsstable/", className = "tablewssc.DeleteRecord")
+    @ResponseWrapper(localName = "deleteRecordResponse", targetNamespace = "http://wsstable/", className = "tablewssc.DeleteRecordResponse")
+    @Action(input = "http://wsstable/TableService/deleteRecordRequest", output = "http://wsstable/TableService/deleteRecordResponse")
+    public boolean deleteRecord(
+        @WebParam(name = "dbName", targetNamespace = "")
+        String dbName,
+        @WebParam(name = "tableName", targetNamespace = "")
+        String tableName,
+        @WebParam(name = "userName", targetNamespace = "")
+        String userName,
+        @WebParam(name = "password", targetNamespace = "")
+        String password,
+        @WebParam(name = "primaryKey", targetNamespace = "")
+        String primaryKey);
+
+    /**
+     * 
+     * @param password
+     * @param dbName
+     * @param userName
      * @param fields
      * @param tableName
      * @return
@@ -50,36 +101,6 @@ public interface TableService {
         String dbName,
         @WebParam(name = "password", targetNamespace = "")
         String password);
-
-    /**
-     * 
-     * @param password
-     * @param dbName
-     * @param values
-     * @param userName
-     * @param tableName
-     * @param primaryKey
-     * @return
-     *     returns boolean
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "updateRecord", targetNamespace = "http://wsstable/", className = "tablewssc.UpdateRecord")
-    @ResponseWrapper(localName = "updateRecordResponse", targetNamespace = "http://wsstable/", className = "tablewssc.UpdateRecordResponse")
-    @Action(input = "http://wsstable/TableService/updateRecordRequest", output = "http://wsstable/TableService/updateRecordResponse")
-    public boolean updateRecord(
-        @WebParam(name = "dbName", targetNamespace = "")
-        String dbName,
-        @WebParam(name = "tableName", targetNamespace = "")
-        String tableName,
-        @WebParam(name = "userName", targetNamespace = "")
-        String userName,
-        @WebParam(name = "password", targetNamespace = "")
-        String password,
-        @WebParam(name = "values", targetNamespace = "")
-        String values,
-        @WebParam(name = "primaryKey", targetNamespace = "")
-        String primaryKey);
 
     /**
      * 
@@ -157,6 +178,7 @@ public interface TableService {
      * 
      * @param password
      * @param dbName
+     * @param values
      * @param userName
      * @param tableName
      * @param primaryKey
@@ -165,10 +187,10 @@ public interface TableService {
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "deleteRecord", targetNamespace = "http://wsstable/", className = "tablewssc.DeleteRecord")
-    @ResponseWrapper(localName = "deleteRecordResponse", targetNamespace = "http://wsstable/", className = "tablewssc.DeleteRecordResponse")
-    @Action(input = "http://wsstable/TableService/deleteRecordRequest", output = "http://wsstable/TableService/deleteRecordResponse")
-    public boolean deleteRecord(
+    @RequestWrapper(localName = "updateRecord", targetNamespace = "http://wsstable/", className = "tablewssc.UpdateRecord")
+    @ResponseWrapper(localName = "updateRecordResponse", targetNamespace = "http://wsstable/", className = "tablewssc.UpdateRecordResponse")
+    @Action(input = "http://wsstable/TableService/updateRecordRequest", output = "http://wsstable/TableService/updateRecordResponse")
+    public boolean updateRecord(
         @WebParam(name = "dbName", targetNamespace = "")
         String dbName,
         @WebParam(name = "tableName", targetNamespace = "")
@@ -177,6 +199,8 @@ public interface TableService {
         String userName,
         @WebParam(name = "password", targetNamespace = "")
         String password,
+        @WebParam(name = "values", targetNamespace = "")
+        String values,
         @WebParam(name = "primaryKey", targetNamespace = "")
         String primaryKey);
 

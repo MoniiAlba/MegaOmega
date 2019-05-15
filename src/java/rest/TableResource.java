@@ -14,6 +14,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -38,10 +39,15 @@ public class TableResource {
      * @return an instance of java.lang.String
      */
     @GET
-    @Produces(MediaType.TEXT_HTML)
-    public String getHtml() {
+    @Produces("application/json")
+    public String getHtml(
+        @QueryParam("dbName") String dbName, 
+        @QueryParam("tableName") String tableName, 
+        @QueryParam( "userName") String userName, 
+        @QueryParam("password") String password) {
         //TODO return proper representation object
-        return "TableResource";
+        
+        return getFields(dbName, tableName, userName,  password);
     }
 
     /**
@@ -71,4 +77,12 @@ public class TableResource {
         tablewssc.TableService port = service.getTableServicePort();
         return port.createTable(userName, tableName, fields, dbName, password);
     }
+
+    private static String getFields(java.lang.String dbName, java.lang.String tableName, java.lang.String userName, java.lang.String password) {
+        tablewssc.TableService_Service service = new tablewssc.TableService_Service();
+        tablewssc.TableService port = service.getTableServicePort();
+        return port.getFields(dbName, tableName, userName, password);
+    }
+
+    
 }

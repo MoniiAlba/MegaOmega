@@ -28,6 +28,8 @@ public class ObjectFactory {
     private final static QName _CreateTableResponse_QNAME = new QName("http://wsstable/", "createTableResponse");
     private final static QName _DeleteRecord_QNAME = new QName("http://wsstable/", "deleteRecord");
     private final static QName _DeleteRecordResponse_QNAME = new QName("http://wsstable/", "deleteRecordResponse");
+    private final static QName _GetFields_QNAME = new QName("http://wsstable/", "getFields");
+    private final static QName _GetFieldsResponse_QNAME = new QName("http://wsstable/", "getFieldsResponse");
     private final static QName _GetRecords_QNAME = new QName("http://wsstable/", "getRecords");
     private final static QName _GetRecordsResponse_QNAME = new QName("http://wsstable/", "getRecordsResponse");
     private final static QName _Hello_QNAME = new QName("http://wsstable/", "hello");
@@ -74,6 +76,22 @@ public class ObjectFactory {
      */
     public DeleteRecordResponse createDeleteRecordResponse() {
         return new DeleteRecordResponse();
+    }
+
+    /**
+     * Create an instance of {@link GetFields }
+     * 
+     */
+    public GetFields createGetFields() {
+        return new GetFields();
+    }
+
+    /**
+     * Create an instance of {@link GetFieldsResponse }
+     * 
+     */
+    public GetFieldsResponse createGetFieldsResponse() {
+        return new GetFieldsResponse();
     }
 
     /**
@@ -174,6 +192,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://wsstable/", name = "deleteRecordResponse")
     public JAXBElement<DeleteRecordResponse> createDeleteRecordResponse(DeleteRecordResponse value) {
         return new JAXBElement<DeleteRecordResponse>(_DeleteRecordResponse_QNAME, DeleteRecordResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetFields }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://wsstable/", name = "getFields")
+    public JAXBElement<GetFields> createGetFields(GetFields value) {
+        return new JAXBElement<GetFields>(_GetFields_QNAME, GetFields.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetFieldsResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://wsstable/", name = "getFieldsResponse")
+    public JAXBElement<GetFieldsResponse> createGetFieldsResponse(GetFieldsResponse value) {
+        return new JAXBElement<GetFieldsResponse>(_GetFieldsResponse_QNAME, GetFieldsResponse.class, null, value);
     }
 
     /**

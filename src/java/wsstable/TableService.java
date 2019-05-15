@@ -174,6 +174,35 @@ public class TableService {
         return res;
     }
     
+//    /**
+//     * Web service operation
+//     */
+//    @WebMethod(operationName = "getFields")
+//    public String getFields(
+//            @WebParam(name = "dbName") String dbName, 
+//            @WebParam(name = "tableName") String tableName, 
+//            @WebParam(name = "userName") String userName, 
+//            @WebParam(name = "password") String password) {
+//        JSONArray res = new JSONArray();
+//        JSONObject aux;
+//        ArrayList<TableField> fields;
+//        try {
+//            TableManager t = new TableManager(tableName, dbName, userName, password);
+//            fields = t.getFields();
+//            for( TableField tf : fields ){
+//                aux = new JSONObject();
+//                aux.put("name", tf.name);
+//                aux.put("type", tf.type);
+//                aux.put("isPrimaryKey", tf.isPrimaryKey);
+//                res.add(aux);
+//            }
+//        } catch (Exception ex) {
+//            Logger.getLogger(TableService.class.getName()).log(Level.SEVERE, null, ex);
+//            return "{ \"error\": \""+ ex.toString()+"\"}";
+//        }
+//        return res.toString();
+//    }
+
     /**
      * Web service operation
      */
