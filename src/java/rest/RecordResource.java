@@ -12,11 +12,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
@@ -55,12 +58,12 @@ public class RecordResource {
     }
 
     /**
-     * PUT INSERT RECORD
+     * POST INSERT RECORD
      * @param content representation for the resource
      */
-    @PUT
+    @POST
     @Produces(MediaType.APPLICATION_XML)
-    public RecordResponse putHtml(
+    public RecordResponse postHtml(
         @FormParam("userName") String userName, 
         @FormParam("tableName") String tableName, 
         @FormParam( "values") String values, 
@@ -77,12 +80,12 @@ public class RecordResource {
     }
 
     /**
-     * POST UPDATE RECORD
+     * PUT UPDATE RECORD
      * @param content representation for the resource
      */
-    @POST
+    @PUT
     @Produces(MediaType.APPLICATION_XML)
-    public RecordResponse postHtml(
+    public RecordResponse putHtml(
         @FormParam("userName") String userName, 
         @FormParam("tableName") String tableName, 
         @FormParam( "values") String values, 
@@ -96,6 +99,29 @@ public class RecordResource {
             res = new RecordResponse("exito", "Update de tupla exitosa");
         else
             res = new RecordResponse("error", "Error en update de tupla");
+        return res;
+    }
+    
+    /**
+     * DELETE DELETE RECORD
+     * @param content representation for the resource
+     */
+    @DELETE
+    @Path("/{primaryKey}")
+    @Produces(MediaType.APPLICATION_XML)
+    public RecordResponse deleteHtml(
+        @HeaderParam("userName") String userName, 
+        @HeaderParam("tableName") String tableName, 
+        @HeaderParam("dbName") String dbName, 
+        @HeaderParam("password") String password,
+        @PathParam("primaryKey") String primaryKey) {
+        //System.out.println(userName+""+tableName+""+dbName+""+password+""+primaryKey);
+        boolean status = deleteRecord(dbName, tableName, userName, password, primaryKey);
+        RecordResponse res;
+        if( status )
+            res = new RecordResponse("exito", "Eliminacion de tupla exitosa");
+        else
+            res = new RecordResponse("error", "Error en eliminacion de tupla");
         return res;
     }
 
@@ -115,6 +141,12 @@ public class RecordResource {
         tablewssc.TableService_Service service = new tablewssc.TableService_Service();
         tablewssc.TableService port = service.getTableServicePort();
         return port.updateRecord(dbName, tableName, userName, password, values, primaryKey);
+    }
+
+    private static boolean deleteRecord(java.lang.String dbName, java.lang.String tableName, java.lang.String userName, java.lang.String password, java.lang.String primaryKey) {
+        tablewssc.TableService_Service service = new tablewssc.TableService_Service();
+        tablewssc.TableService port = service.getTableServicePort();
+        return port.deleteRecord(dbName, tableName, userName, password, primaryKey);
     }
     
     
