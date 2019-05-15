@@ -15,20 +15,26 @@
         <h1>Crear nuevo usuario</h1>
         <script>
             function sendUser(){
-                var user = document.getElementById(user).value;
-                var pass = document.getElementById(pwd).value;
-                var db = document.getElementById(db).value;
+                var user = document.getElementById("user").value;
+                var pass = document.getElementById("pwd").value;
+                var db = document.getElementById("db").value;
                 
                 if(user != "" && pass != "" && db != ""){
+                    guardaUsuario(user, pass, db);
                     return true;
                 }else{
                     alert("Datos incompletos");
-                    return false
+                    return false;
                 }
                     
             }
+            
+            function guardaUsuario(u, p, db){
+                var usuario={userName: u, dbName: db, password: p};
+                localStorage.setItem('user', JSON.stringify(usuario));
+            }
         </script>
-        <form action="dataValidation.jsp" method="POST" onsubmit="return sendUSer()">
+        <form action="dataValidation.jsp" method="POST" onsubmit="return sendUser()">
             Usuario: <input id="user" type="text" name="userName" value="" /> <br>
             Contraseña: <input id="pwd" type="password" name="password" value="" /> <br>
             Nombre de la base de datos: <input id="db" type="text" name="dbName" value="" /> <br>

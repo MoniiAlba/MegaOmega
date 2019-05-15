@@ -32,7 +32,7 @@
                 mySession.setMaxInactiveInterval(10);
                 response.sendRedirect("Tables.jsp");
             }else{
-                if (password != null && userName != null) {
+                if (password != null && userName != null) { //login user
                     
                     String answer = callRest.postHtml(userName, password);
                     JSONObject userData;

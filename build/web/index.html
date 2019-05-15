@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>DataWeb Wizard</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
@@ -19,11 +19,17 @@ and open the template in the editor.
                     var user = document.getElementById("uName").value;
                     var pwd = document.getElementById("pwd").value;
                     if(user != "" && pwd != ""){
+                        guardaUsuario(user, pwd);
                        return true;
                     }else{
                         alert("Ingrese todos los datos");
                         return false;
                     }
+                }
+                
+                function guardaUsuario(u,p){
+                    var usuario={userName: u, dbName: "", password: p};
+                    localStorage.setItem('user', JSON.stringify(usuario));
                 }
             </script>
             
