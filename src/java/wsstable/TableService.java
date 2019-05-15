@@ -103,6 +103,32 @@ public class TableService {
         
         return res == null ? "": res.toString();
     }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "insertRecord")
+    public boolean insertRecord(
+            @WebParam(name = "dbName") String dbName, 
+            @WebParam(name = "tableName") String tableName, 
+            @WebParam(name = "userName") String userName, 
+            @WebParam(name = "password") String password, 
+            @WebParam(name = "values") String values) {
+        boolean res = false;
+        try {
+            //TODO write your implementation code here:
+            TableManager t = new TableManager(tableName, dbName, userName,password);
+            JSONParser parser = new JSONParser();
+            JSONObject valuesJ = (JSONObject) parser.parse(values);
+            t.insertRecord(valuesJ);
+            res = true;
+        } catch (Exception ex) {
+            Logger.getLogger(TableService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+    
+    
     
     
     

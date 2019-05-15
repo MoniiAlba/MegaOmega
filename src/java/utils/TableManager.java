@@ -31,7 +31,7 @@ public class TableManager {
         
         Statement st = conn.getStmt();
         rs = st.executeQuery("SELECT * FROM SYS.SYSTABLES where tabletype ='T' and tablename = '"+tableName+"'");
-        System.out.println("[Table Manager]: " +"SELECT * FROM SYS.SYSTABLES where tabletype ='T' and tablename = '"+tableName+"'" );
+        //System.out.println("[Table Manager]: " +"SELECT * FROM SYS.SYSTABLES where tabletype ='T' and tablename = '"+tableName+"'" );
         if(!rs.next())
             throw new Exception("[Table Manager]: Non existing table");
         else
