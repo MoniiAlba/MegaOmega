@@ -95,7 +95,7 @@
 
                     </tbody>
                 </table>
-                <input type="hidden" id="tablaSelec" value="" />
+                <input type="hidden" id="tablaSelec" name="tableName" value="" />
                 <input type="submit" id="tablaButton" value="Ver tabla" disabled="disabled" />
             </form>
 

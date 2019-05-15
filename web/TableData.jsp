@@ -9,9 +9,19 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Datos</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <%-- Este código se copia y pega en todas las vistas que tengamos --%>
+        <%
+            HttpSession mySession = request.getSession();
+            if(mySession.getAttribute("userName") != null){
+                out.print("<h1> Datos de tabla " + request.getParameter("tableName"));
+                
+            }else{
+                response.sendRedirect("dataValidation.jsp");
+            }
+            
+        %>
     </body>
 </html>
