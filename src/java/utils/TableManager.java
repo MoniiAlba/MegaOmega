@@ -181,7 +181,7 @@ public class TableManager {
         }
         aux.deleteCharAt(aux.length()-2);
         sql = sql + aux.toString() + " WHERE " + getPk().name +" = " + pk;
-        //System.out.println(sql);
+        System.out.println("[Table Manager]: " + sql);
         q.executeUpdate(sql);
         
     }
