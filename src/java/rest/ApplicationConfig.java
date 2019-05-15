@@ -31,6 +31,7 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(rest.AuthResource.class);
         resources.add(rest.DbResource.class);
+        resources.add(rest.TableResource.class);
     }
     
 }

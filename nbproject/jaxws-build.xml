@@ -91,5 +91,21 @@
         <delete dir="${build.generated.sources.dir}/jax-ws/dbwsc"/>
         <delete dir="${build.generated.dir}/jax-wsCache/DataBaseService"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-AuthService, wsimport-client-DataBaseService"/>
+    <target name="wsimport-client-TableService" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/TableService"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/TableService" destdir="${build.generated.dir}/jax-wsCache/TableService" wsdl="${basedir}/${conf-dir}xml-resources/web-service-references/TableService/wsdl/localhost_8080/TableService/TableService.wsdl" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/TableService/TableService?wsdl" xnocompile="true" xendorsed="true" package="tablewssc">
+            <depends file="${basedir}/${conf-dir}xml-resources/web-service-references/TableService/wsdl/localhost_8080/TableService/TableService.wsdl"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/TableService"/>
+        </wsimport>
+        <copy todir="${build.generated.sources.dir}/jax-ws">
+            <fileset dir="${build.generated.dir}/jax-wsCache/TableService">
+                <include name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="wsimport-client-clean-TableService" depends="-init-project">
+        <delete dir="${build.generated.sources.dir}/jax-ws/tablewssc"/>
+        <delete dir="${build.generated.dir}/jax-wsCache/TableService"/>
+    </target>
+    <target name="wsimport-client-generate" depends="wsimport-client-AuthService, wsimport-client-DataBaseService, wsimport-client-TableService"/>
 </project>
