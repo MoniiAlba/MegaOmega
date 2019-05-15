@@ -14,6 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
@@ -75,6 +76,29 @@ public class RecordResource {
         return res;
     }
 
+    /**
+     * POST UPDATE RECORD
+     * @param content representation for the resource
+     */
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    public RecordResponse postHtml(
+        @FormParam("userName") String userName, 
+        @FormParam("tableName") String tableName, 
+        @FormParam( "values") String values, 
+        @FormParam("dbName") String dbName, 
+        @FormParam("password") String password,
+        @FormParam("primaryKey") String primaryKey) {
+        
+        boolean status = updateRecord(dbName, tableName, userName, password, values, primaryKey);
+        RecordResponse res;
+        if( status )
+            res = new RecordResponse("exito", "Update de tupla exitosa");
+        else
+            res = new RecordResponse("error", "Error en update de tupla");
+        return res;
+    }
+
     private static String getRecords(java.lang.String dbName, java.lang.String tableName, java.lang.String userName, java.lang.String password, int start, int end) {
         tablewssc.TableService_Service service = new tablewssc.TableService_Service();
         tablewssc.TableService port = service.getTableServicePort();
@@ -85,6 +109,12 @@ public class RecordResource {
         tablewssc.TableService_Service service = new tablewssc.TableService_Service();
         tablewssc.TableService port = service.getTableServicePort();
         return port.insertRecord(dbName, tableName, userName, password, values);
+    }
+
+    private static boolean updateRecord(java.lang.String dbName, java.lang.String tableName, java.lang.String userName, java.lang.String password, java.lang.String values, java.lang.String primaryKey) {
+        tablewssc.TableService_Service service = new tablewssc.TableService_Service();
+        tablewssc.TableService port = service.getTableServicePort();
+        return port.updateRecord(dbName, tableName, userName, password, values, primaryKey);
     }
     
     
