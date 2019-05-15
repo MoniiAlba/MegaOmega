@@ -11,7 +11,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Perfil</title>
     </head>
-    <%-- Este código se copia y pega en todas las vistas que tengamos --%>
+    
+        <body onload="loadNewContent()">
+                
+        <%-- Este código se copia y pega en todas las vistas que tengamos --%>
         <%
             HttpSession mySession = request.getSession();
             if(mySession.getAttribute("userName") != null){
@@ -23,8 +26,7 @@
             }
             
         %>
-        <body onload="loadNewContent()">
-                
+        
         <script>
             function loadNewContent() {
                 var userData = actualizaUsuario();
@@ -41,11 +43,12 @@
                         var totTablas = xmlDataBase.getElementsByTagName("tables");
                         if(totTablas.length>0){
                             for(var i = 0; i < totTablas.length; i++){
-                                tabla += "<tr> <td>";
-                                tabla+=totTablas[i].childNodes[0].nodeValue + "</td> </tr>";
+                                var nomTabla=totTablas[i].childNodes[0].nodeValue;
+                                tabla += "<tr> <td id='"+nomTabla.toLowerCase()+"' class='clickable' onclick='cambiaSelec("+'"'+nomTabla+'"'+")'>";                                
+                                tabla+=nomTabla.toLowerCase() + " </td> </tr>";
                             }
                         }else{
-                            tabla="<tr><td>No hay tablas en la base de datos por el momento</td></tr>";
+                            tabla="<tr><td>No hay tablas en la base de datos por el momento. Es hora de crear una! :D</td></tr>";
                         }
                         
                         document.getElementById("tableName").innerHTML=tabla;
@@ -54,7 +57,6 @@
                 ajaxRequest.open("PUT", "http://localhost:8080/MegaOmega/webresources/db", true /*async*/);
                 ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
                 var params = "dbName="+userData.dbName+"&userName="+userData.userName+"&psswrd="+userData.password;
-                console.log(params);
                 ajaxRequest.send(params);
             }
             
@@ -66,25 +68,64 @@
                 }
                 return usuario;
             }
+            
+            function cambiaSelec(nombre){
+                if(document.getElementById("tablaSelec").value != ""){
+                    document.getElementById(document.getElementById("tablaSelec").value.toLowerCase()).classList.remove("clicked");
+                }
+                document.getElementById("tablaSelec").value=nombre;
+                document.getElementById(nombre.toLowerCase()).classList.add("clicked");
+                
+                document.getElementById("tablaButton").disabled="";
+                
+            }
         </script>
         
-        <form >
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>Nombre de las tablas</th>
-                    </tr>
-                </thead>
-                <tbody id="tableName">
-                    <tr>
-                        <td>No hay tablas en la base de datos por el momento</td>
-                    </tr>
-                </tbody>
-            </table>
+        <br>
+        <br>
+        <div style="display: flex;">
+            <form class="form" action="TableData.jsp" method="POST">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th style="padding: 5px;">Nombre de las tablas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableName">
 
-        </form>
+                    </tbody>
+                </table>
+                <input type="hidden" id="tablaSelec" value="" />
+                <input type="submit" id="tablaButton" value="Ver tabla" disabled="disabled" />
+            </form>
+
+            <form action="CreateTable.jsp" method="POST" style="margin-left: 100px;">
+                <input type="submit" value="Crear tabla" />
+            </form>
         
-        
+        </div>
+        <style>
+            .clickable{
+                cursor: pointer;
+                font-size: 25px;
+                text-align: center;
+                background-color: white;
+            }
+            
+            .clickable:hover{
+                background-color: #aadbd6;
+            }
+            
+            .clicked{
+                font-size: 25px;
+                text-align: center;
+                background-color: #acf8f0;
+            }
+            
+            .form{
+                margin-left: 50px;
+            }
+        </style>
         
     </body>
 </html>

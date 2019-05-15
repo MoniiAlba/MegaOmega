@@ -7,6 +7,9 @@
     <service name="DataBaseService">
       <implementation-class>wssdatabase.DataBaseService</implementation-class>
     </service>
+    <service name="TableService">
+      <implementation-class>wsstable.TableService</implementation-class>
+    </service>
   </services>
   <clients>
     <client name="AuthService">
@@ -82,4 +85,5 @@
       </wsimport-options>
     </client>
   </clients>
+  <jsr109>true</jsr109>
 </jax-ws>

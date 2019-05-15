@@ -31,6 +31,7 @@ public class TableManager {
         
         Statement st = conn.getStmt();
         rs = st.executeQuery("SELECT * FROM SYS.SYSTABLES where tabletype ='T' and tablename = '"+tableName+"'");
+        System.out.println("[Table Manager]: " +"SELECT * FROM SYS.SYSTABLES where tabletype ='T' and tablename = '"+tableName+"'" );
         if(!rs.next())
             throw new Exception("[Table Manager]: Non existing table");
         else
@@ -88,7 +89,7 @@ public class TableManager {
         sql.append(pk.name);
         sql.append(" ))");
 
-        //Logger.getLogger(TableManager.class.getName()).log(Level.INFO, sql.toString());
+        Logger.getLogger(TableManager.class.getName()).log(Level.INFO,"[Table Manager]:"+ sql.toString());
         Logger.getLogger(TableManager.class.getName()).log(Level.INFO, "[Table Manager]: Created table "+tableName);
         //System.out.println(sql.toString());
         st.executeUpdate(sql.toString());
@@ -180,7 +181,7 @@ public class TableManager {
         }
         aux.deleteCharAt(aux.length()-2);
         sql = sql + aux.toString() + " WHERE " + getPk().name +" = " + pk;
-        //System.out.println(sql);
+        System.out.println("[Table Manager]: " + sql);
         q.executeUpdate(sql);
         
     }
