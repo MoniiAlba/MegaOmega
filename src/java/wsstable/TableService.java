@@ -152,6 +152,30 @@ public class TableService {
         }
         return res;
     }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "deleteRecord")
+    public boolean deleteRecord(
+            @WebParam(name = "dbName") String dbName, 
+            @WebParam(name = "tableName") String tableName, 
+            @WebParam(name = "userName") String userName, 
+            @WebParam(name = "password") String password, 
+            @WebParam(name = "primaryKey") String primaryKey) {
+        boolean res = false;
+        try {
+            TableManager t = new TableManager(tableName, dbName, userName, password);
+            t.deleteRecord(primaryKey);
+            res = true;
+        } catch (Exception ex) {
+            Logger.getLogger(TableService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+    
+    
+    
     
     
     
