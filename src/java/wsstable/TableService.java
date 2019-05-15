@@ -6,6 +6,7 @@
 package wsstable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jws.WebService;
@@ -39,13 +40,14 @@ public class TableService {
      * Web service operation
      */
     @WebMethod(operationName = "createTable")
-    public String createTable(
+    public boolean createTable(
             @WebParam(name = "userName") String userName, 
             @WebParam(name = "tableName") String tableName, 
             @WebParam(name = "fields") String fields, 
             @WebParam(name = "dbName") String dbName, 
             @WebParam(name = "password") String password) {
         //TODO write your implementation code here:
+        boolean res = false;
         JSONParser parser = new JSONParser();
         ArrayList<TableField> fieldsO = new ArrayList<>();
         TableField aux = null;
@@ -63,12 +65,45 @@ public class TableService {
             }
             System.out.println(fieldsJ);
             TableManager t = new TableManager(tableName, dbName, userName, password,fieldsO);
+            res = true;
         } catch (ParseException ex) {
             Logger.getLogger(TableService.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(TableService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "dummy";
+        return res;
     }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "getRecords")
+    public String getRecords(
+            @WebParam(name = "dbName") String dbName, 
+            @WebParam(name = "tableName") String tableName, 
+            @WebParam(name = "userName") String userName, 
+            @WebParam(name = "password") String password, 
+            @WebParam(name = "start") int start, 
+            @WebParam(name = "end") int end) {
+        ArrayList<HashMap<String, String>> qres ;
+        JSONArray res = null;
+        try {
+            //TODO write your implementation code here:
+            TableManager t = new TableManager(tableName, dbName, userName, password);
+            qres = t.getRecords(start, end);
+            res = new JSONArray();
+            JSONObject aux;
+            for( HashMap<String, String> r : qres){
+                aux = new JSONObject(r);
+                res.add(aux);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(TableService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return res == null ? "": res.toString();
+    }
+    
+    
     
 }
