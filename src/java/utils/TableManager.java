@@ -192,6 +192,11 @@ public class TableManager {
         //System.out.println(sql);
         q.executeUpdate(sql);
     }
+
+    public ArrayList<TableField> getFields() {
+        return fields;
+    }
+    
     
 
     
