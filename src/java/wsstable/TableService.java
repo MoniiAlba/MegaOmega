@@ -90,6 +90,7 @@ public class TableService {
         JSONArray res = null;
         try {
             //TODO write your implementation code here:
+            System.out.println("[TableService]:"+tableName+","+dbName+","+userName+","+password);
             TableManager t = new TableManager(tableName, dbName, userName, password);
             qres = t.getRecords(start, end);
             res = new JSONArray();

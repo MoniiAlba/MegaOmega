@@ -9,10 +9,13 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Crear tabla</title>
     </head>
     <body onload="newColumn()">
-        <%-- Este código se copia y pega en todas las vistas que tengamos --%>
+    <%-- Este código se copia y pega en todas las vistas que tengamos --%>
         <%--
             HttpSession mySession = request.getSession();
             if(mySession.getAttribute("userName") == null){
@@ -32,7 +35,6 @@
             <input type="button" value="Eliminar columna" onclick="deleteColumn()">
             <input type="button" value="Crear tabla" onclick="createTable()">
         </div>
-        
         <script>
             var fields= [];
             var numCols = 0;
