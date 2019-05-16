@@ -105,7 +105,7 @@ public class TableManager {
         return res;
     }
     
-    public ArrayList<HashMap<String,String>> getRecords(int start, int end) throws SQLException{
+    public ArrayList<HashMap<String,String>> getRecords(int start, int end) throws SQLException{ //empieza y cuántos quiero
         ArrayList<HashMap<String,String>> res = new ArrayList<>();
         HashMap<String, String> it ;
         Statement q = conn.getStmt();
