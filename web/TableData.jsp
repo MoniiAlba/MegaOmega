@@ -66,38 +66,11 @@
             var base = 0;
             var tableName = document.getElementById("tableName").value;
             var userData = getUser();
-            
+            var table;
             function setTable(){
+                
                 getRecords();
-                var table = [{col1: "val1", col2: "val2", col3: "val3", col4: "val4"},{col1: "val5", col2: "val6", col3: "val7", col4: "val8"},{col1: "val9", col2: "val10", col3: "val11", col4: "val12"}];
-                //llamar servicio instead
-                var numFields = 4;
-                //lamar servicio instead
-                //llenar header
-                var theader = "";
-                var tbody = "";
-                var inputs = "";
-                fields = Object.getOwnPropertyNames(table[0]);
-                if(table.length>0){ //número de filas
-                    theader += "<tr>"
-                    for(var i = 0; i < fields.length; i++){
-                        theader += "<th class='tableValue'>" + fields[i] + "</th>"
-                        inputs += fields[i] + "<input style='margin: 5px' type='text' id='input"+fields[i]+"' value='' /> <br>";
-                    }
-                    theader += "</tr>";
-                    //llenar body
-                    for(var j = 0; j < numR; j ++){ //each row
-                        var idRow = "row"+j;
-                        tbody += "<tr class='tableRow' id='"+idRow+"' onclick='rowSelected("+'"row'+j+'")' + "'> ";
-                        for(var i = 0; i < fields.length; i++){
-                            tbody += "<td class='tableValue' id='"+idRow+ "-" + fields[i] +"' value='"+table[j][fields[i]]+"'>"+ table[j][fields[i]] +"</td>";
-                        }
-                        tbody += "</tr>";
-                    }
-                }
-                document.getElementById("tableFields").innerHTML = theader;
-                document.getElementById("tableRows").innerHTML = tbody;
-                document.getElementById("inputsToEdit").innerHTML = inputs;
+                
                  
                 
             }
@@ -116,11 +89,39 @@
                 ajaxRequest.onreadystatechange = function(){
                     if (ajaxRequest.readyState==4 && ajaxRequest.status==200){
                         var tableJSON = JSON.parse(ajaxRequest.responseText); 
-                        console.log(tableJSON);
-                        
+                        table = tableJSON;
+                        //llamar servicio instead
+                        var numFields = 2;
+                        //lamar servicio instead
+                        //llenar header
+                        var theader = "";
+                        var tbody = "";
+                        var inputs = "";
+                        console.log(Object.keys(table));
+                        fields = Object.getOwnPropertyNames(table[0]);
+                        if(table.length>0){ //número de filas
+                            theader += "<tr>"
+                            for(var i = 0; i < fields.length; i++){
+                                theader += "<th class='tableValue'>" + fields[i] + "</th>"
+                                inputs += fields[i] + "<input style='margin: 5px' type='text' id='input"+fields[i]+"' value='' /> <br>";
+                            }
+                            theader += "</tr>";
+                            //llenar body
+                            for(var j = 0; j < numR; j ++){ //each row
+                                var idRow = "row"+j;
+                                tbody += "<tr class='tableRow' id='"+idRow+"' onclick='rowSelected("+'"row'+j+'")' + "'> ";
+                                for(var i = 0; i < fields.length; i++){
+                                    tbody += "<td class='tableValue' id='"+idRow+ "-" + fields[i] +"' value='"+table[j][fields[i]]+"'>"+ table[j][fields[i]] +"</td>";
+                                }
+                                tbody += "</tr>";
+                            }
+                        }
+                        document.getElementById("tableFields").innerHTML = theader;
+                        document.getElementById("tableRows").innerHTML = tbody;
+                        document.getElementById("inputsToEdit").innerHTML = inputs;
                     }
                 }
-                var params = "dbName="+userData.dbName+"&tableName="+userData.dbName+"."+tableName+"&userName="+userData.userName+"&password="+userData.password+"&start="+base+"&end="+numR;
+                var params = "dbName="+userData.dbName.trim()+"&tableName="+tableName+"&userName="+userData.userName.trim()+"&password="+userData.password.trim()+"&start="+base+"&end="+numR;
                 ajaxRequest.open("GET", "http://localhost:8080/MegaOmega/webresources/record?"+params, true /*async*/);
                 ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
                 
