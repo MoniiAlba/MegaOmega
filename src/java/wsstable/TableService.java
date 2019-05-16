@@ -53,6 +53,7 @@ public class TableService {
         TableField aux = null;
         JSONObject jaux = null;
         try {
+            System.out.println(fields);
             JSONArray fieldsJ = (JSONArray) parser.parse(fields);
             for( Object f : fieldsJ){
                 if ( f instanceof JSONObject){

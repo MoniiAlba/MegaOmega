@@ -24,49 +24,17 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _GetTableNameResponse_QNAME = new QName("http://wssdatabase/", "getTableNameResponse");
-    private final static QName _HelloResponse_QNAME = new QName("http://wssdatabase/", "helloResponse");
-    private final static QName _GetTableName_QNAME = new QName("http://wssdatabase/", "getTableName");
-    private final static QName _Hello_QNAME = new QName("http://wssdatabase/", "hello");
     private final static QName _Exception_QNAME = new QName("http://wssdatabase/", "Exception");
+    private final static QName _GetTableName_QNAME = new QName("http://wssdatabase/", "getTableName");
+    private final static QName _GetTableNameResponse_QNAME = new QName("http://wssdatabase/", "getTableNameResponse");
+    private final static QName _Hello_QNAME = new QName("http://wssdatabase/", "hello");
+    private final static QName _HelloResponse_QNAME = new QName("http://wssdatabase/", "helloResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: dbwsc
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link GetTableNameResponse }
-     * 
-     */
-    public GetTableNameResponse createGetTableNameResponse() {
-        return new GetTableNameResponse();
-    }
-
-    /**
-     * Create an instance of {@link HelloResponse }
-     * 
-     */
-    public HelloResponse createHelloResponse() {
-        return new HelloResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetTableName }
-     * 
-     */
-    public GetTableName createGetTableName() {
-        return new GetTableName();
-    }
-
-    /**
-     * Create an instance of {@link Hello }
-     * 
-     */
-    public Hello createHello() {
-        return new Hello();
     }
 
     /**
@@ -78,21 +46,44 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetTableNameResponse }{@code >}}
+     * Create an instance of {@link GetTableName }
      * 
      */
-    @XmlElementDecl(namespace = "http://wssdatabase/", name = "getTableNameResponse")
-    public JAXBElement<GetTableNameResponse> createGetTableNameResponse(GetTableNameResponse value) {
-        return new JAXBElement<GetTableNameResponse>(_GetTableNameResponse_QNAME, GetTableNameResponse.class, null, value);
+    public GetTableName createGetTableName() {
+        return new GetTableName();
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link HelloResponse }{@code >}}
+     * Create an instance of {@link GetTableNameResponse }
      * 
      */
-    @XmlElementDecl(namespace = "http://wssdatabase/", name = "helloResponse")
-    public JAXBElement<HelloResponse> createHelloResponse(HelloResponse value) {
-        return new JAXBElement<HelloResponse>(_HelloResponse_QNAME, HelloResponse.class, null, value);
+    public GetTableNameResponse createGetTableNameResponse() {
+        return new GetTableNameResponse();
+    }
+
+    /**
+     * Create an instance of {@link Hello }
+     * 
+     */
+    public Hello createHello() {
+        return new Hello();
+    }
+
+    /**
+     * Create an instance of {@link HelloResponse }
+     * 
+     */
+    public HelloResponse createHelloResponse() {
+        return new HelloResponse();
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Exception }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://wssdatabase/", name = "Exception")
+    public JAXBElement<Exception> createException(Exception value) {
+        return new JAXBElement<Exception>(_Exception_QNAME, Exception.class, null, value);
     }
 
     /**
@@ -105,6 +96,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetTableNameResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://wssdatabase/", name = "getTableNameResponse")
+    public JAXBElement<GetTableNameResponse> createGetTableNameResponse(GetTableNameResponse value) {
+        return new JAXBElement<GetTableNameResponse>(_GetTableNameResponse_QNAME, GetTableNameResponse.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link Hello }{@code >}}
      * 
      */
@@ -114,12 +114,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link Exception }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link HelloResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://wssdatabase/", name = "Exception")
-    public JAXBElement<Exception> createException(Exception value) {
-        return new JAXBElement<Exception>(_Exception_QNAME, Exception.class, null, value);
+    @XmlElementDecl(namespace = "http://wssdatabase/", name = "helloResponse")
+    public JAXBElement<HelloResponse> createHelloResponse(HelloResponse value) {
+        return new JAXBElement<HelloResponse>(_HelloResponse_QNAME, HelloResponse.class, null, value);
     }
 
 }
