@@ -33,7 +33,7 @@ public class DataBaseService {
      */
     @WebMethod(operationName = "getTableName")
     public ArrayList<String> getTableName(@WebParam(name = "dbName") String dbName, @WebParam(name = "userName") String userName, @WebParam(name = "password") String password) throws Exception {
-        //System.out.println("Datos: "+dbName+userName+password);
+        System.out.println("Datos: "+dbName+userName+password);
         DBManager db = new DBManager();
         ArrayList <String> tablas = db.getTableName(dbName, userName, password);
         return tablas;

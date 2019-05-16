@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
@@ -52,10 +53,11 @@ public class DbResource {
      * @param content representation for the resource
      * @return an HTTP response with content of the updated or created resource.
      */
-    @PUT
+    @POST
     @Produces(MediaType.APPLICATION_XML)
-    public  DataBase putXml(@FormParam("dbName")String dbName, @FormParam("userName")String userName, @FormParam("password")String psswrd) throws Exception {
+    public  DataBase postXml(@FormParam("dbName")String dbName, @FormParam("userName")String userName, @FormParam("password")String psswrd) throws Exception {
         //TODO return proper representation object
+        System.out.println("[DbResource]: "+dbName+" "+ userName+" "+psswrd);
         ArrayList <String> ans = getTableName(dbName, userName, psswrd);
         System.out.println("Resp: "+ans.toString());
         DataBase db = new DataBase();

@@ -26,15 +26,18 @@ public class DBManager {
     
     public ArrayList <String> getTableName(String dbName, String user, String psswrd){
         try {
+            System.out.println("[DBManager]: "+dbName+user+psswrd);
             this.conn = new DbConnection(dbName, user, psswrd);
+            
             Statement st = conn.getStmt();
             rs = st.executeQuery("SELECT TABLENAME FROM SYS.SYSTABLES where tabletype ='T'");
-            
+            System.out.println("Hizo la conexion");
             ArrayList <String> tablas = new ArrayList<>();
             while(rs.next()){
                 tablas.add(rs.getString("TABLENAME"));
                 System.out.println("Tabla añadida: "+rs.getString("TABLENAME"));
             }
+            System.out.println("QUERY");
             return tablas;
             
         } catch (SQLException ex) {

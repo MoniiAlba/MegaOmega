@@ -29,7 +29,7 @@
         
         <script>
             function loadNewContent() {
-                var userData = actualizaUsuario();
+                var userData = updateUser();
                 var ajaxRequest;
                 if (window.XMLHttpRequest){
                     ajaxRequest=new XMLHttpRequest(); // IE7+, Firefox, Chrome, Opera, Safari
@@ -44,7 +44,7 @@
                         if(totTablas.length>0){
                             for(var i = 0; i < totTablas.length; i++){
                                 var nomTabla=totTablas[i].childNodes[0].nodeValue;
-                                tabla += "<tr> <td id='"+nomTabla.toLowerCase()+"' class='clickable' onclick='cambiaSelec("+'"'+nomTabla+'"'+")'>";                                
+                                tabla += "<tr> <td id='"+nomTabla.toLowerCase()+"' class='clickable' onclick='changeSelec("+'"'+nomTabla+'"'+")'>";                                
                                 tabla+=nomTabla.toLowerCase() + " </td> </tr>";
                             }
                         }else{
@@ -54,22 +54,24 @@
                         document.getElementById("tableName").innerHTML=tabla;
                     }
                 }
-                ajaxRequest.open("PUT", "http://localhost:8080/MegaOmega/webresources/db", true /*async*/);
+                ajaxRequest.open("POST", "http://localhost:8080/MegaOmega/webresources/db", true /*async*/);
                 ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
-                var params = "dbName="+userData.dbName+"&userName="+userData.userName+"&psswrd="+userData.password;
+                var params = "dbName="+userData.dbName.trim()+"&userName="+userData.userName.trim()+"&password="+userData.password.trim();
+                console.log(ajaxRequest);
                 ajaxRequest.send(params);
             }
             
-            function actualizaUsuario(){
+            function updateUser(){
                 var usuario = JSON.parse(localStorage.getItem('user'));
                 if(usuario.dbName==""){
                     usuario.dbName=document.getElementById("dbName").value;
                     localStorage.setItem('user', JSON.stringify(usuario));
                 }
+                var usuario = JSON.parse(localStorage.getItem('user'));
                 return usuario;
             }
             
-            function cambiaSelec(nombre){
+            function changeSelec(nombre){
                 if(document.getElementById("tablaSelec").value != ""){
                     document.getElementById(document.getElementById("tablaSelec").value.toLowerCase()).classList.remove("clicked");
                 }

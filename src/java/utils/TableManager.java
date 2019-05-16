@@ -112,7 +112,7 @@ public class TableManager {
         TableField pk = getPk();
         String sql = "SELECT * FROM "+tableName+" ORDER BY "+pk.name+" OFFSET "
                 + start+ " ROWS FETCH NEXT "+end+ " ROWS ONLY";
-        //System.out.println(sql);
+        System.out.println(sql);
         ResultSet rs = q.executeQuery(sql);
         while( rs.next() ){
             it = new HashMap<>();
