@@ -17,13 +17,13 @@
         <%-- Este código se copia y pega en todas las vistas que tengamos --%>
         <%
             HttpSession mySession = request.getSession();
-            //if(mySession.getAttribute("userName") != null){
+            if(mySession.getAttribute("userName") != null){
                 out.print("<h1 style='margin: 10px'> Datos de la tabla " + request.getParameter("tableName")+"</h1>");
                 out.print("<input type='hidden' id='tableName' name='' value='"+request.getParameter("tableName")+"' />");
                 
-            //}else{
-                //response.sendRedirect("dataValidation.jsp");
-            //}
+            }else{
+                response.sendRedirect("dataValidation.jsp");
+            }
             
         %>
         
@@ -88,18 +88,17 @@
                 }
                 ajaxRequest.onreadystatechange = function(){
                     if (ajaxRequest.readyState==4 && ajaxRequest.status==200){
-                        var tableJSON = JSON.parse(ajaxRequest.responseText); 
-                        table = tableJSON;
-                        //llamar servicio instead
-                        var numFields = 2;
-                        //lamar servicio instead
-                        //llenar header
-                        var theader = "";
-                        var tbody = "";
-                        var inputs = "";
-                        console.log(Object.keys(table));
-                        fields = Object.getOwnPropertyNames(table[0]);
-                        if(table.length>0){ //número de filas
+                        table = JSON.parse(ajaxRequest.responseText);
+                        console.log(table);
+                        if(table.length > 0){
+                            fields = Object.keys(table[0]);
+                            var numFields = fields.length;
+                            var theader = "";
+                            var tbody = "";
+                            var inputs = "";
+                            console.log(Object.keys(table[0]));
+                            fields = Object.keys(table[0]);
+                            
                             theader += "<tr>"
                             for(var i = 0; i < fields.length; i++){
                                 theader += "<th class='tableValue'>" + fields[i] + "</th>"
@@ -116,6 +115,7 @@
                                 tbody += "</tr>";
                             }
                         }
+                        
                         document.getElementById("tableFields").innerHTML = theader;
                         document.getElementById("tableRows").innerHTML = tbody;
                         document.getElementById("inputsToEdit").innerHTML = inputs;
