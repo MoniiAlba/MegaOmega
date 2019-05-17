@@ -197,11 +197,24 @@ public class TableManager {
         return fields;
     }
     
+    public int getCount() throws SQLException{
+        Statement q = conn.getStmt();
+        String sql = "SELECT COUNT(*) as CUENTA FROM "+ tableName;
+        int res = 0;
+        System.out.println(sql);
+        ResultSet rs = q.executeQuery(sql);
+        if( rs.next() ){
+            
+            res = rs.getInt("CUENTA");
+        }
+        return res;
+    }
+    
     
 
     
     public static void main(String[] args) throws Exception{
-        
+       // TableManager t  = new TableManager();
 
     }
 }

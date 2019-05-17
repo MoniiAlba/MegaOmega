@@ -10,23 +10,17 @@
 <message name="getFieldsResponse">
 <part name="parameters" element="tns:getFieldsResponse"/>
 </message>
+<message name="getCount">
+<part name="parameters" element="tns:getCount"/>
+</message>
+<message name="getCountResponse">
+<part name="parameters" element="tns:getCountResponse"/>
+</message>
 <message name="deleteRecord">
 <part name="parameters" element="tns:deleteRecord"/>
 </message>
 <message name="deleteRecordResponse">
 <part name="parameters" element="tns:deleteRecordResponse"/>
-</message>
-<message name="createTable">
-<part name="parameters" element="tns:createTable"/>
-</message>
-<message name="createTableResponse">
-<part name="parameters" element="tns:createTableResponse"/>
-</message>
-<message name="getRecords">
-<part name="parameters" element="tns:getRecords"/>
-</message>
-<message name="getRecordsResponse">
-<part name="parameters" element="tns:getRecordsResponse"/>
 </message>
 <message name="insertRecord">
 <part name="parameters" element="tns:insertRecord"/>
@@ -34,11 +28,11 @@
 <message name="insertRecordResponse">
 <part name="parameters" element="tns:insertRecordResponse"/>
 </message>
-<message name="hello">
-<part name="parameters" element="tns:hello"/>
+<message name="getRecords">
+<part name="parameters" element="tns:getRecords"/>
 </message>
-<message name="helloResponse">
-<part name="parameters" element="tns:helloResponse"/>
+<message name="getRecordsResponse">
+<part name="parameters" element="tns:getRecordsResponse"/>
 </message>
 <message name="updateRecord">
 <part name="parameters" element="tns:updateRecord"/>
@@ -46,34 +40,50 @@
 <message name="updateRecordResponse">
 <part name="parameters" element="tns:updateRecordResponse"/>
 </message>
+<message name="createTable">
+<part name="parameters" element="tns:createTable"/>
+</message>
+<message name="createTableResponse">
+<part name="parameters" element="tns:createTableResponse"/>
+</message>
+<message name="hello">
+<part name="parameters" element="tns:hello"/>
+</message>
+<message name="helloResponse">
+<part name="parameters" element="tns:helloResponse"/>
+</message>
 <portType name="TableService">
 <operation name="getFields">
 <input wsam:Action="http://wsstable/TableService/getFieldsRequest" message="tns:getFields"/>
 <output wsam:Action="http://wsstable/TableService/getFieldsResponse" message="tns:getFieldsResponse"/>
 </operation>
+<operation name="getCount">
+<input wsam:Action="http://wsstable/TableService/getCountRequest" message="tns:getCount"/>
+<output wsam:Action="http://wsstable/TableService/getCountResponse" message="tns:getCountResponse"/>
+</operation>
 <operation name="deleteRecord">
 <input wsam:Action="http://wsstable/TableService/deleteRecordRequest" message="tns:deleteRecord"/>
 <output wsam:Action="http://wsstable/TableService/deleteRecordResponse" message="tns:deleteRecordResponse"/>
-</operation>
-<operation name="createTable">
-<input wsam:Action="http://wsstable/TableService/createTableRequest" message="tns:createTable"/>
-<output wsam:Action="http://wsstable/TableService/createTableResponse" message="tns:createTableResponse"/>
-</operation>
-<operation name="getRecords">
-<input wsam:Action="http://wsstable/TableService/getRecordsRequest" message="tns:getRecords"/>
-<output wsam:Action="http://wsstable/TableService/getRecordsResponse" message="tns:getRecordsResponse"/>
 </operation>
 <operation name="insertRecord">
 <input wsam:Action="http://wsstable/TableService/insertRecordRequest" message="tns:insertRecord"/>
 <output wsam:Action="http://wsstable/TableService/insertRecordResponse" message="tns:insertRecordResponse"/>
 </operation>
-<operation name="hello">
-<input wsam:Action="http://wsstable/TableService/helloRequest" message="tns:hello"/>
-<output wsam:Action="http://wsstable/TableService/helloResponse" message="tns:helloResponse"/>
+<operation name="getRecords">
+<input wsam:Action="http://wsstable/TableService/getRecordsRequest" message="tns:getRecords"/>
+<output wsam:Action="http://wsstable/TableService/getRecordsResponse" message="tns:getRecordsResponse"/>
 </operation>
 <operation name="updateRecord">
 <input wsam:Action="http://wsstable/TableService/updateRecordRequest" message="tns:updateRecord"/>
 <output wsam:Action="http://wsstable/TableService/updateRecordResponse" message="tns:updateRecordResponse"/>
+</operation>
+<operation name="createTable">
+<input wsam:Action="http://wsstable/TableService/createTableRequest" message="tns:createTable"/>
+<output wsam:Action="http://wsstable/TableService/createTableResponse" message="tns:createTableResponse"/>
+</operation>
+<operation name="hello">
+<input wsam:Action="http://wsstable/TableService/helloRequest" message="tns:hello"/>
+<output wsam:Action="http://wsstable/TableService/helloResponse" message="tns:helloResponse"/>
 </operation>
 </portType>
 <binding name="TableServicePortBinding" type="tns:TableService">
@@ -87,25 +97,16 @@
 <soap:body use="literal"/>
 </output>
 </operation>
+<operation name="getCount">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="deleteRecord">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="createTable">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="getRecords">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -123,7 +124,7 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="hello">
+<operation name="getRecords">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -133,6 +134,24 @@
 </output>
 </operation>
 <operation name="updateRecord">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="createTable">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="hello">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

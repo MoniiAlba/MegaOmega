@@ -17,13 +17,13 @@
         <%-- Este código se copia y pega en todas las vistas que tengamos --%>
         <%
             HttpSession mySession = request.getSession();
-            //if(mySession.getAttribute("userName") != null){
+            if(mySession.getAttribute("userName") != null){
                 out.print("<h1 style='margin: 10px'> Datos de la tabla " + request.getParameter("tableName")+"</h1>");
                 out.print("<input type='hidden' id='tableName' name='' value='"+request.getParameter("tableName")+"' />");
                 
-            //}else{
-                //response.sendRedirect("dataValidation.jsp");
-            //}
+            }else{
+                response.sendRedirect("dataValidation.jsp");
+            }
             
         %>
         
@@ -88,19 +88,15 @@
                 }
                 ajaxRequest.onreadystatechange = function(){
                     if (ajaxRequest.readyState==4 && ajaxRequest.status==200){
-                        var tableJSON = JSON.parse(ajaxRequest.responseText); 
-                        table = tableJSON;
-                        console.log(table)
-                        //llamar servicio instead
-                        var numFields = 2;
-                        //lamar servicio instead
-                        //llenar header
-                        var theader = "";
-                        var tbody = "";
-                        var inputs = "";
-                        console.log(Object.keys(table));
-                        fields = Object.getOwnPropertyNames(table[0]);
-                        if(table.length>0){ //número de filas
+                        table = JSON.parse(ajaxRequest.responseText);
+                        console.log(table);
+                        if(table.length > 0){
+                            fields = Object.keys(table[0]);
+                            var numFields = fields.length;
+                            var theader = "";
+                            var tbody = "";
+                            var inputs = "";
+                            console.log(Object.keys(table[0]));
                             theader += "<tr>"
                             for(var i = 0; i < fields.length; i++){
                                 theader += "<th class='tableValue'>" + fields[i] + "</th>"
@@ -117,6 +113,7 @@
                                 tbody += "</tr>";
                             }
                         }
+                        
                         document.getElementById("tableFields").innerHTML = theader;
                         document.getElementById("tableRows").innerHTML = tbody;
                         document.getElementById("inputsToEdit").innerHTML = inputs;
@@ -128,13 +125,299 @@
                 
                 ajaxRequest.send();
             }
+            
+            function callInsert() {
+                let inputs = document.getElementById('inputsToEdit').childNodes
+                let user = JSON.parse(window.localStorage.getItem("user"))
+                console.log(user)
+                
+                let payload = {
+                    tableName: tableName.trim(),
+                    userName: user.userName.toString().trim(),
+                    dbName: user.dbName.toString().trim(),
+                    password: user.password.toString().trim()
+                }
+                
+                let encodedFields = Object.keys(payload).map(function(k) {
+                    return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])
+                }).join('&')
+                console.log(encodedFields)
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                xhr.onload = function () {
+                        parser = new DOMParser();
+                        var response = JSON.parse(xhr.responseText);
+                        if (xhr.readyState == 4 && xhr.status == "200") {
+                            console.log(response);
+                            let data = []
+                            for(let i = 0; i < inputs.length; i++){
+                                if(inputs[i].nodeName == 'INPUT'){
+                                    data.push(inputs[i])
+                                }
+                            }
+                            let typeApproved = true
+                            let columnValue = null
+                            let columns = {}
+                            for(let i =0; i < response.length; i++){
+                                console.log(response[i].type == "4")
+                                if(response[i].type === "4"){
+                                        try{
+                                            columnValue = parseInt(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "8"){
+                                        try{
+                                            columnValue = parseFloat(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "12"){
+                                        try{
+                                            columnValue = "'"+data[i].value.toString()+"'"
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                
+                                columns[response[i].name] = columnValue
+                                console.log(inputs)
+                                console.log(columns)
+                            }
+                            
+                            encodedFields += "&values=" + JSON.stringify(columns)
+                            
+                            var xhr2 = new XMLHttpRequest();
+                            xhr2.open("POST", "http://localhost:8080/MegaOmega/webresources/record", true);
+                            xhr2.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                            xhr2.onload = function () {
+                                    parser = new DOMParser();
+                                    var response = parser.parseFromString(xhr2.responseText,"text/xml");
+                                    if (xhr2.readyState == 4 && xhr2.status == "200") {
+                                        console.log(response);
+                                    } else {
+                                        console.error(response);
+                                    }
+                            }
+                            
+                            xhr2.send(encodedFields)
+                            
+                            console.log(encodedFields)
+                            
+                        } else {
+                            console.error(response);
+                        }
+                }
+                xhr.send()       
+            }
            
             function callDelete(){
+               let inputs = document.getElementById('inputsToEdit').childNodes
+                let user = JSON.parse(window.localStorage.getItem("user"))
+                console.log(user)
                 
+                let payload = {
+                    tableName: tableName.trim(),
+                    userName: user.userName.toString().trim(),
+                    dbName: user.dbName.toString().trim(),
+                    password: user.password.toString().trim()
+                }
+                let primaryKey = null
+                let encodedFields = Object.keys(payload).map(function(k) {
+                    return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])
+                }).join('&')
+                console.log(encodedFields)
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                xhr.onload = function () {
+                        parser = new DOMParser();
+                        var response = JSON.parse(xhr.responseText);
+                        if (xhr.readyState == 4 && xhr.status == "200") {
+                            console.log(response);
+                            let data = []
+                            for(let i = 0; i < inputs.length; i++){
+                                if(inputs[i].nodeName == 'INPUT'){
+                                    data.push(inputs[i])
+                                }
+                            }
+                            let typeApproved = true
+                            let columnValue = null
+                            let columns = {}
+                            for(let i =0; i < response.length; i++){
+                                
+                                if(response[i].type === "4"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                primaryKey = data[i].value.toString()
+                                            }
+                                            columnValue = parseInt(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "8"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                primaryKey = data[i].value.toString()
+                                            }
+                                            columnValue = parseFloat(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "12"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                primaryKey = data[i].value.toString() + "'"
+                                            }
+                                            columnValue = "'"+data[i].value.toString()+"'"
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                
+                                columns[response[i].name] = columnValue
+                                console.log(inputs)
+                                console.log(columns)
+                            }
+                            
+                            encodedFields += "&values=" + JSON.stringify(columns)
+                            var xhr2 = new XMLHttpRequest();
+                            xhr2.open("DELETE", "http://localhost:8080/MegaOmega/webresources/record/"+primaryKey, true);
+                            xhr2.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                            xhr2.setRequestHeader('tableName:',tableName.toString().trim());
+                            xhr2.setRequestHeader('userName:',user.userName.toString().trim());
+                            xhr2.setRequestHeader('dbName:',user.dbName.toString().trim());
+                            xhr2.setRequestHeader('password:',user.password.toString().trim());
+                            xhr2.onload = function () {
+                                    parser = new DOMParser();
+                                    var response = parser.parseFromString(xhr2.responseText,"text/xml");
+                                    if (xhr2.readyState == 4 && xhr2.status == "200") {
+                                        console.log(response);
+                                    } else {
+                                        console.error(response);
+                                    }
+                            }
+                            
+                            xhr2.send(encodedFields)
+                            
+                            console.log(encodedFields)
+                            
+                        } else {
+                            console.error(response);
+                        }
+                }
+                xhr.send()  
             }
             
             function callUpdate(){
+                let inputs = document.getElementById('inputsToEdit').childNodes
+                let user = JSON.parse(window.localStorage.getItem("user"))
+                console.log(user)
                 
+                let payload = {
+                    tableName: tableName.trim(),
+                    userName: user.userName.toString().trim(),
+                    dbName: user.dbName.toString().trim(),
+                    password: user.password.toString().trim()
+                }
+                
+                let encodedFields = Object.keys(payload).map(function(k) {
+                    return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])
+                }).join('&')
+                console.log(encodedFields)
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                xhr.onload = function () {
+                        parser = new DOMParser();
+                        var response = JSON.parse(xhr.responseText);
+                        if (xhr.readyState == 4 && xhr.status == "200") {
+                            console.log(response);
+                            let data = []
+                            for(let i = 0; i < inputs.length; i++){
+                                if(inputs[i].nodeName == 'INPUT'){
+                                    data.push(inputs[i])
+                                }
+                            }
+                            let typeApproved = true
+                            let columnValue = null
+                            let columns = {}
+                            for(let i =0; i < response.length; i++){
+                                
+                                if(response[i].type === "4"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey=" + data[i].value.toString()
+                                            }
+                                            columnValue = parseInt(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "8"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey=" + data[i].value.toString()
+                                            }
+                                            columnValue = parseFloat(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "12"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey='" + data[i].value.toString() + "'"
+                                            }
+                                            columnValue = "'"+data[i].value.toString()+"'"
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                
+                                columns[response[i].name] = columnValue
+                                console.log(inputs)
+                                console.log(columns)
+                            }
+                            
+                            encodedFields += "&values=" + JSON.stringify(columns)
+                            
+                            var xhr2 = new XMLHttpRequest();
+                            xhr2.open("PUT", "http://localhost:8080/MegaOmega/webresources/record", true);
+                            xhr2.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                            xhr2.onload = function () {
+                                    parser = new DOMParser();
+                                    var response = parser.parseFromString(xhr2.responseText,"text/xml");
+                                    if (xhr2.readyState == 4 && xhr2.status == "200") {
+                                        console.log(response);
+                                    } else {
+                                        console.error(response);
+                                    }
+                            }
+                            
+                            xhr2.send(encodedFields)
+                            
+                            console.log(encodedFields)
+                            
+                        } else {
+                            console.error(response);
+                        }
+                }
+                xhr.send()    
             }
             
             function updateRecord(){

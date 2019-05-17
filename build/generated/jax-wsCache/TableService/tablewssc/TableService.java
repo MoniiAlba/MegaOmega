@@ -54,6 +54,30 @@ public interface TableService {
      * @param dbName
      * @param userName
      * @param tableName
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getCount", targetNamespace = "http://wsstable/", className = "tablewssc.GetCount")
+    @ResponseWrapper(localName = "getCountResponse", targetNamespace = "http://wsstable/", className = "tablewssc.GetCountResponse")
+    @Action(input = "http://wsstable/TableService/getCountRequest", output = "http://wsstable/TableService/getCountResponse")
+    public String getCount(
+        @WebParam(name = "dbName", targetNamespace = "")
+        String dbName,
+        @WebParam(name = "tableName", targetNamespace = "")
+        String tableName,
+        @WebParam(name = "userName", targetNamespace = "")
+        String userName,
+        @WebParam(name = "password", targetNamespace = "")
+        String password);
+
+    /**
+     * 
+     * @param password
+     * @param dbName
+     * @param userName
+     * @param tableName
      * @param primaryKey
      * @return
      *     returns boolean
@@ -79,28 +103,28 @@ public interface TableService {
      * 
      * @param password
      * @param dbName
+     * @param values
      * @param userName
-     * @param fields
      * @param tableName
      * @return
      *     returns boolean
      */
     @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "createTable", targetNamespace = "http://wsstable/", className = "tablewssc.CreateTable")
-    @ResponseWrapper(localName = "createTableResponse", targetNamespace = "http://wsstable/", className = "tablewssc.CreateTableResponse")
-    @Action(input = "http://wsstable/TableService/createTableRequest", output = "http://wsstable/TableService/createTableResponse")
-    public boolean createTable(
-        @WebParam(name = "userName", targetNamespace = "")
-        String userName,
-        @WebParam(name = "tableName", targetNamespace = "")
-        String tableName,
-        @WebParam(name = "fields", targetNamespace = "")
-        String fields,
+    @RequestWrapper(localName = "insertRecord", targetNamespace = "http://wsstable/", className = "tablewssc.InsertRecord")
+    @ResponseWrapper(localName = "insertRecordResponse", targetNamespace = "http://wsstable/", className = "tablewssc.InsertRecordResponse")
+    @Action(input = "http://wsstable/TableService/insertRecordRequest", output = "http://wsstable/TableService/insertRecordResponse")
+    public boolean insertRecord(
         @WebParam(name = "dbName", targetNamespace = "")
         String dbName,
+        @WebParam(name = "tableName", targetNamespace = "")
+        String tableName,
+        @WebParam(name = "userName", targetNamespace = "")
+        String userName,
         @WebParam(name = "password", targetNamespace = "")
-        String password);
+        String password,
+        @WebParam(name = "values", targetNamespace = "")
+        String values);
 
     /**
      * 
@@ -139,48 +163,6 @@ public interface TableService {
      * @param values
      * @param userName
      * @param tableName
-     * @return
-     *     returns boolean
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "insertRecord", targetNamespace = "http://wsstable/", className = "tablewssc.InsertRecord")
-    @ResponseWrapper(localName = "insertRecordResponse", targetNamespace = "http://wsstable/", className = "tablewssc.InsertRecordResponse")
-    @Action(input = "http://wsstable/TableService/insertRecordRequest", output = "http://wsstable/TableService/insertRecordResponse")
-    public boolean insertRecord(
-        @WebParam(name = "dbName", targetNamespace = "")
-        String dbName,
-        @WebParam(name = "tableName", targetNamespace = "")
-        String tableName,
-        @WebParam(name = "userName", targetNamespace = "")
-        String userName,
-        @WebParam(name = "password", targetNamespace = "")
-        String password,
-        @WebParam(name = "values", targetNamespace = "")
-        String values);
-
-    /**
-     * 
-     * @param name
-     * @return
-     *     returns java.lang.String
-     */
-    @WebMethod
-    @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "hello", targetNamespace = "http://wsstable/", className = "tablewssc.Hello")
-    @ResponseWrapper(localName = "helloResponse", targetNamespace = "http://wsstable/", className = "tablewssc.HelloResponse")
-    @Action(input = "http://wsstable/TableService/helloRequest", output = "http://wsstable/TableService/helloResponse")
-    public String hello(
-        @WebParam(name = "name", targetNamespace = "")
-        String name);
-
-    /**
-     * 
-     * @param password
-     * @param dbName
-     * @param values
-     * @param userName
-     * @param tableName
      * @param primaryKey
      * @return
      *     returns boolean
@@ -203,5 +185,47 @@ public interface TableService {
         String values,
         @WebParam(name = "primaryKey", targetNamespace = "")
         String primaryKey);
+
+    /**
+     * 
+     * @param password
+     * @param dbName
+     * @param userName
+     * @param fields
+     * @param tableName
+     * @return
+     *     returns boolean
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "createTable", targetNamespace = "http://wsstable/", className = "tablewssc.CreateTable")
+    @ResponseWrapper(localName = "createTableResponse", targetNamespace = "http://wsstable/", className = "tablewssc.CreateTableResponse")
+    @Action(input = "http://wsstable/TableService/createTableRequest", output = "http://wsstable/TableService/createTableResponse")
+    public boolean createTable(
+        @WebParam(name = "userName", targetNamespace = "")
+        String userName,
+        @WebParam(name = "tableName", targetNamespace = "")
+        String tableName,
+        @WebParam(name = "fields", targetNamespace = "")
+        String fields,
+        @WebParam(name = "dbName", targetNamespace = "")
+        String dbName,
+        @WebParam(name = "password", targetNamespace = "")
+        String password);
+
+    /**
+     * 
+     * @param name
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "hello", targetNamespace = "http://wsstable/", className = "tablewssc.Hello")
+    @ResponseWrapper(localName = "helloResponse", targetNamespace = "http://wsstable/", className = "tablewssc.HelloResponse")
+    @Action(input = "http://wsstable/TableService/helloRequest", output = "http://wsstable/TableService/helloResponse")
+    public String hello(
+        @WebParam(name = "name", targetNamespace = "")
+        String name);
 
 }
