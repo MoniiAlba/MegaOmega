@@ -68,16 +68,37 @@
         </form>
         <script>
             var numR = parseInt(document.getElementById("numRecords").value);
-            var fields;
+            var fields; //solamente el nombre de los campos
             var base = 0;
             var tableName = document.getElementById("tableName").value;
             var userData = getUser();
             var table;
             var totRows = getTotRows();
-            
+            var headers = getHeaders(); //tanto campos como tipos y primaryKey
             function changeNumR(){
                 numR = parseInt(document.getElementById("numRecords").value);
                 getRecords();
+            }
+            
+            function getHeaders(){
+                var ajaxRequest;
+                if (window.XMLHttpRequest){
+                    ajaxRequest=new XMLHttpRequest(); // IE7+, Firefox, Chrome, Opera, Safari
+                } else {
+                    ajaxRequest=new ActiveXObject("Microsoft.XMLHTTP"); // IE6, IE5
+                }
+                ajaxRequest.onreadystatechange = function(){
+                    if (ajaxRequest.readyState==4 && ajaxRequest.status==200){
+                        headers = JSON.parse(ajaxRequest.responseText);
+                        console.log("HEADERS: "+headers)
+                    }
+                }
+                var params = "dbName="+userData.dbName.trim()+"&tableName="+tableName.trim()+"&userName="+userData.userName.trim()+"&password="+userData.password.trim();
+                //var params = "dbName=prueba&tableName=MUSICACOOL&userName=prueba&password=prueba";
+                //console.log(params);
+                ajaxRequest.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+params, true /*async*/);
+                //ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
+                ajaxRequest.send();
             }
             
             function getTotRows(){
@@ -126,7 +147,7 @@
                         if(table.length > 0){
                             fields = Object.keys(table[0]);
                             numFields = fields.length;
-                            console.log(Object.keys(table[0]));
+                            //console.log(Object.keys(table[0]));
                             theader += "<tr>"
                             for(var i = 0; i < fields.length; i++){
                                 theader += "<th class='tableValue'>" + fields[i] + "</th>"
@@ -143,39 +164,21 @@
                                 tbody += "</tr>";
                             }
                         }else{
-                            console.log("No hay datos");
+//                            console.log("No hay datos");
                             tbody = "<tr class='tableRow'>No hay datos para mostrar</tr>";
-                            var ajaxRequest2;
-                            if (window.XMLHttpRequest){
-                                ajaxRequest2=new XMLHttpRequest(); // IE7+, Firefox, Chrome, Opera, Safari
-                            } else {
-                                ajaxRequest2=new ActiveXObject("Microsoft.XMLHTTP"); // IE6, IE5
+                            theader += "<tr>"
+                            for(var i = 0; i < headers.length; i++){
+                                //console.log("Col "+i)
+                                theader += "<th class='tableValue'>" + headers[i].name + "</th>"
+                                //console.log("Header: "+theader)
+                                inputs += headers[i].name + "<input style='margin: 5px' type='text' id='input"+headers[i].name+"' value='' /> <br>";
+                                //console.log("Inputs: "+inputs)
                             }
-                            ajaxRequest2.onreadystatechange = function(){
-                                if (ajaxRequest2.readyState==4 && ajaxRequest2.status==200){
-                                    console.log("Regresa del segundo get");
-                                    var rows = JSON.parse(ajaxRequest2.responseText);
-                                    console.log(rows)
-                                    theader += "<tr>"
-                                    for(var i = 0; i < rows.length; i++){
-                                        console.log("Col "+i)
-                                        theader += "<th class='tableValue'>" + rows[i].name + "</th>"
-                                        console.log("Header: "+theader)
-                                        inputs += rows[i].name + "<input style='margin: 5px' type='text' id='input"+rows[i].name+"' value='' /> <br>";
-                                        console.log("Inputs: "+inputs)
-                                    }
-                                    theader += "</tr>";                                    
-                                    document.getElementById("tableFields").innerHTML = theader;
-                                    document.getElementById("tableRows").innerHTML = tbody;
-                                    document.getElementById("inputsToEdit").innerHTML = inputs;
-                                }
-                            }
-                            var params = "dbName="+userData.dbName.trim()+"&tableName="+tableName.trim()+"&userName="+userData.userName.trim()+"&password="+userData.password.trim();
-                            //var params = "dbName=prueba&tableName=MUSICACOOL&userName=prueba&password=prueba";
-                            console.log(params);
-                            ajaxRequest2.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+params, true /*async*/);
-                            //ajaxRequest2.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
-                            ajaxRequest2.send();
+                            theader += "</tr>";                                    
+                            document.getElementById("tableFields").innerHTML = theader;
+                            document.getElementById("tableRows").innerHTML = tbody;
+                            document.getElementById("inputsToEdit").innerHTML = inputs;
+                                
                             
                         }
                         
@@ -194,66 +197,72 @@
             function callInsert() {
                 let inputs = document.getElementById('inputsToEdit').childNodes
                 let user = JSON.parse(window.localStorage.getItem("user"))
-                console.log(user)
-                
+//                //console.log(user)
+//                
                 let payload = {
                     tableName: tableName.trim(),
                     userName: user.userName.toString().trim(),
                     dbName: user.dbName.toString().trim(),
                     password: user.password.toString().trim()
                 }
-                
+//                
                 let encodedFields = Object.keys(payload).map(function(k) {
                     return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])
                 }).join('&')
                 console.log(encodedFields)
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
-                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
-                xhr.onload = function () {
-                        parser = new DOMParser();
-                        var response = JSON.parse(xhr.responseText);
-                        if (xhr.readyState == 4 && xhr.status == "200") {
-                            console.log(response);
-                            let data = []
-                            for(let i = 0; i < inputs.length; i++){
-                                if(inputs[i].nodeName == 'INPUT'){
-                                    data.push(inputs[i])
-                                }
+//                var xhr = new XMLHttpRequest();
+//                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+//                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+//                xhr.onload = function () {
+//                        parser = new DOMParser();
+//                        var response = JSON.parse(xhr.responseText);
+//                        if (xhr.readyState == 4 && xhr.status == "200") {
+//                            console.log("Response: "+response);
+//                            console.log("FIELDS: "+fields)
+//                            console.log("HEADERS: "+headers)
+                            let data = [] //en el mismo orden de los headers
+                            for(var i = 0; i < headers.length; i++){
+                                var nomInput = "input"+headers[i].name
+                                data.push(document.getElementById(nomInput).value)
                             }
+//                            for(let i = 0; i < inputs.length; i++){
+//                                if(inputs[i].nodeName == 'INPUT'){
+//                                    data.push(inputs[i])
+//                                }
+//                            }
                             console.log("Data: " + data)
                             let typeApproved = true
                             let columnValue = null
                             let columns = {}
-                            for(let i =0; i < response.length; i++){
-                                console.log("VALOR: "+data[i].value)
-                                console.log(response[i].type == "4")
-                                if(response[i].type === "4"){
+                            for(let i =0; i < headers.length; i++){
+                                console.log("VALOR: "+data[i])
+                                console.log(headers[i].type == "4")
+                                if(headers[i].type === "4"){
                                         try{
-                                            columnValue = parseInt(data[i].value).toString()
+                                            columnValue = parseInt(data[i]).toString()
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
-                                if(response[i].type === "8"){
+                                if(headers[i].type === "8"){
                                         try{
-                                            columnValue = parseFloat(data[i].value).toString()
+                                            columnValue = parseFloat(data[i]).toString()
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
-                                if(response[i].type === "12"){
+                                if(headers[i].type === "12"){
                                         try{
-                                            columnValue = "'"+data[i].value.toString()+"'"
+                                            columnValue = "'"+data[i]+"'"
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
                                 
-                                columns[response[i].name] = columnValue
+                                columns[headers[i].name] = columnValue
                                 console.log(inputs)
                                 console.log(columns)
                             }
@@ -280,12 +289,12 @@
                             
                             console.log(encodedFields)
                             
-                        } else {
-                            console.error(response);
-                            alert("Error al insertar tupla :(");
-                        }
-                }
-                xhr.send()       
+//                        } else {
+//                            console.error(response);
+//                            alert("Error al insertar tupla :(");
+//                        }
+//                }
+//                xhr.send()       
                 
             }
            
