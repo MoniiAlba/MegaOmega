@@ -29,7 +29,7 @@
                 HttpSession mySession = request.getSession();
                 mySession.setAttribute("userName", userData.get("userName"));
                 mySession.setAttribute("dbName", userData.get("dbName"));
-                mySession.setMaxInactiveInterval(10);
+                mySession.setMaxInactiveInterval(20);
                 response.sendRedirect("Tables.jsp");
             }else{
                 if (password != null && userName != null) { //login user
@@ -42,7 +42,7 @@
                     HttpSession mySession = request.getSession();
                     mySession.setAttribute("userName", userData.get("userName"));
                     mySession.setAttribute("dbName", userData.get("dbName"));
-                    mySession.setMaxInactiveInterval(10);
+                    mySession.setMaxInactiveInterval(20);
                     response.sendRedirect("Tables.jsp");
                 } else {
                     out.println("<p> Sesión no iniciada </p>");

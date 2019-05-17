@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/solid.css" integrity="sha384-ioUrHig76ITq4aEJ67dHzTvqjsAP/7IzgwE7lgJcg2r7BRNGYSK0LwSmROzYtgzs" crossorigin="anonymous">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/fontawesome.css" integrity="sha384-sri+NftO+0hcisDKgr287Y/1LVnInHJ1l+XC7+FOabmTTIK0HnE2ID+xxvJ21c5J" crossorigin="anonymous">
     </head>
-    <body onload="setTable()">
+    <body onload="getRecords()">
         <%-- Este código se copia y pega en todas las vistas que tengamos --%>
         <%
             HttpSession mySession = request.getSession();
@@ -30,7 +30,7 @@
         <br>
         <br>
         <div class="tableContainer">
-            Número de registros: <input type="text" id="numRecords" name="numRecords" value="3" size="4"/>
+            Número de registros: <input type="text" id="numRecords" name="numRecords" value="3" size="4" onchange="changeNumR()"/>
             <br>
             <br>
             
@@ -41,8 +41,10 @@
                 </tbody>
             </table>
             <div class="arrows">
-                <i class="fas fa-chevron-left arrow"></i>
-                <i class="fas fa-chevron-right arrow"></i> 
+                <div><i id="leftArrow" class="fas fa-angle-double-left arrow dontClickMe" onclick="showFirst()"></i></div>
+                <div><i id="leftArrow" class="fas fa-chevron-left arrow dontClickMe" onclick="showPrev()"></i></div>
+                <div><i id="leftArrow" class="fas fa-chevron-right arrow" onclick="showNext()"></i></div>
+                <div><i id="rightArrow" class="fas fa-angle-double-right arrow" onclick="showLast()"></i></div>
             </div>
             
             <br>
@@ -59,20 +61,22 @@
             <input type="submit" id="deleteButton" value="Eliminar registro" disabled="disabled" onclick="callDelete()" />
             <input type="submit" id="updateButton" value="Editar registro" disabled="disabled" onclick="callUpdate()" />
         </div>
-        
+        <br>
+        <br>
+        <form action="Tables.jsp">
+            <input type="submit" value="Regresar al perfil" />
+        </form>
         <script>
-            var numR = document.getElementById("numRecords").value;
+            var numR = parseInt(document.getElementById("numRecords").value);
             var fields;
             var base = 0;
             var tableName = document.getElementById("tableName").value;
             var userData = getUser();
             var table;
-            function setTable(){
-                
+            
+            function changeNumR(){
+                numR = parseInt(document.getElementById("numRecords").value);
                 getRecords();
-                
-                 
-                
             }
             
             function getFields(){
@@ -90,14 +94,22 @@
                     if (ajaxRequest.readyState==4 && ajaxRequest.status==200){
                         table = JSON.parse(ajaxRequest.responseText);
                         console.log(table);
+                        console.log("Base en servicio: "+base);
+                        if(table.length < numR){
+                            document.getElementById("rightArrow").classList.add("dontClickMe");
+                        }else{
+                            if(document.getElementById("rightArrow").classList.contains("dontClickMe")){
+                                document.getElementById("rightArrow").classList.remove("dontClickMe");
+                            }
+                        }
+                        var numFields;
+                        var theader = "";
+                        var tbody = "";
+                        var inputs = "";
                         if(table.length > 0){
                             fields = Object.keys(table[0]);
-                            var numFields = fields.length;
-                            var theader = "";
-                            var tbody = "";
-                            var inputs = "";
+                            numFields = fields.length;
                             console.log(Object.keys(table[0]));
-                            fields = Object.keys(table[0]);
                             
                             theader += "<tr>"
                             for(var i = 0; i < fields.length; i++){
@@ -106,7 +118,7 @@
                             }
                             theader += "</tr>";
                             //llenar body
-                            for(var j = 0; j < numR; j ++){ //each row
+                            for(var j = 0; j < table.length; j ++){ //each row
                                 var idRow = "row"+j;
                                 tbody += "<tr class='tableRow' id='"+idRow+"' onclick='rowSelected("+'"row'+j+'")' + "'> ";
                                 for(var i = 0; i < fields.length; i++){
@@ -114,6 +126,8 @@
                                 }
                                 tbody += "</tr>";
                             }
+                        }else{
+                            tbody = "No hay datos para mostrar";
                         }
                         
                         document.getElementById("tableFields").innerHTML = theader;
@@ -134,6 +148,28 @@
             
             function callUpdate(){
                 
+            }
+            
+            function showPrev(){
+                if(base - numR < 0){
+                    base = 0;
+                    document.getElementById("leftArrow").classList.add("dontClickMe");
+                }else{
+                    if(document.getElementById("leftArrow").classList.contains("dontClickMe")){
+                        document.getElementById("leftArrow").classList.remove("dontClickMe");
+                    }
+                    base -= numR;
+                }
+                getRecords();
+            }
+            
+            function showNext(){
+                console.log("Base: "+base)
+                if(document.getElementById("leftArrow").classList.contains("dontClickMe")){
+                    document.getElementById("leftArrow").classList.remove("dontClickMe");
+                }
+                base += numR;
+                getRecords();
             }
             
             function updateRecord(){
@@ -215,6 +251,11 @@
         
         .arrow:active{
             color:blue;
+        }
+        
+        .dontClickMe{
+            pointer-events: none;
+            color: gray;
         }
     </style>
 </html>
