@@ -90,7 +90,7 @@
                 ajaxRequest.onreadystatechange = function(){
                     if (ajaxRequest.readyState==4 && ajaxRequest.status==200){
                         totRows = JSON.parse(ajaxRequest.responseText).count;
-                        console.log(totRows);
+                        console.log("NEW totRows:"+ totRows);
                     }
                 }
                 var params = "dbName="+userData.dbName.trim()+"&tableName="+tableName.trim()+"&userName="+userData.userName.trim()+"&password="+userData.password.trim();
