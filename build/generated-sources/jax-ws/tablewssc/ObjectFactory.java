@@ -28,12 +28,14 @@ public class ObjectFactory {
     private final static QName _GetFieldsResponse_QNAME = new QName("http://wsstable/", "getFieldsResponse");
     private final static QName _HelloResponse_QNAME = new QName("http://wsstable/", "helloResponse");
     private final static QName _GetFields_QNAME = new QName("http://wsstable/", "getFields");
+    private final static QName _GetCount_QNAME = new QName("http://wsstable/", "getCount");
     private final static QName _UpdateRecord_QNAME = new QName("http://wsstable/", "updateRecord");
     private final static QName _DeleteRecord_QNAME = new QName("http://wsstable/", "deleteRecord");
     private final static QName _DeleteRecordResponse_QNAME = new QName("http://wsstable/", "deleteRecordResponse");
     private final static QName _GetRecords_QNAME = new QName("http://wsstable/", "getRecords");
     private final static QName _Hello_QNAME = new QName("http://wsstable/", "hello");
     private final static QName _UpdateRecordResponse_QNAME = new QName("http://wsstable/", "updateRecordResponse");
+    private final static QName _GetCountResponse_QNAME = new QName("http://wsstable/", "getCountResponse");
     private final static QName _CreateTable_QNAME = new QName("http://wsstable/", "createTable");
     private final static QName _GetRecordsResponse_QNAME = new QName("http://wsstable/", "getRecordsResponse");
     private final static QName _InsertRecord_QNAME = new QName("http://wsstable/", "insertRecord");
@@ -44,6 +46,14 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
+    }
+
+    /**
+     * Create an instance of {@link GetCountResponse }
+     * 
+     */
+    public GetCountResponse createGetCountResponse() {
+        return new GetCountResponse();
     }
 
     /**
@@ -143,6 +153,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link GetCount }
+     * 
+     */
+    public GetCount createGetCount() {
+        return new GetCount();
+    }
+
+    /**
      * Create an instance of {@link DeleteRecordResponse }
      * 
      */
@@ -192,6 +210,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://wsstable/", name = "getFields")
     public JAXBElement<GetFields> createGetFields(GetFields value) {
         return new JAXBElement<GetFields>(_GetFields_QNAME, GetFields.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetCount }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://wsstable/", name = "getCount")
+    public JAXBElement<GetCount> createGetCount(GetCount value) {
+        return new JAXBElement<GetCount>(_GetCount_QNAME, GetCount.class, null, value);
     }
 
     /**
@@ -246,6 +273,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://wsstable/", name = "updateRecordResponse")
     public JAXBElement<UpdateRecordResponse> createUpdateRecordResponse(UpdateRecordResponse value) {
         return new JAXBElement<UpdateRecordResponse>(_UpdateRecordResponse_QNAME, UpdateRecordResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetCountResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://wsstable/", name = "getCountResponse")
+    public JAXBElement<GetCountResponse> createGetCountResponse(GetCountResponse value) {
+        return new JAXBElement<GetCountResponse>(_GetCountResponse_QNAME, GetCountResponse.class, null, value);
     }
 
     /**

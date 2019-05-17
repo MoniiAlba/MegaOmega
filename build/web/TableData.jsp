@@ -41,10 +41,10 @@
                 </tbody>
             </table>
             <div class="arrows">
-                <div><i id="leftArrow" class="fas fa-angle-double-left arrow dontClickMe" onclick="showFirst()"></i></div>
+                <div><i id="leftDArrow" class="fas fa-angle-double-left arrow dontClickMe" onclick="showFirst()"></i></div>
                 <div><i id="leftArrow" class="fas fa-chevron-left arrow dontClickMe" onclick="showPrev()"></i></div>
-                <div><i id="leftArrow" class="fas fa-chevron-right arrow" onclick="showNext()"></i></div>
-                <div><i id="rightArrow" class="fas fa-angle-double-right arrow" onclick="showLast()"></i></div>
+                <div><i id="rightArrow" class="fas fa-chevron-right arrow" onclick="showNext()"></i></div>
+                <div><i id="rightDArrow" class="fas fa-angle-double-right arrow" onclick="showLast()"></i></div>
             </div>
             
             <br>
@@ -73,14 +73,31 @@
             var tableName = document.getElementById("tableName").value;
             var userData = getUser();
             var table;
+            var totRows = getTotRows();
             
             function changeNumR(){
                 numR = parseInt(document.getElementById("numRecords").value);
                 getRecords();
             }
             
-            function getFields(){
+            function getTotRows(){
+                var ajaxRequest;
+                if (window.XMLHttpRequest){
+                    ajaxRequest=new XMLHttpRequest(); // IE7+, Firefox, Chrome, Opera, Safari
+                } else {
+                    ajaxRequest=new ActiveXObject("Microsoft.XMLHTTP"); // IE6, IE5
+                }
+                ajaxRequest.onreadystatechange = function(){
+                    if (ajaxRequest.readyState==4 && ajaxRequest.status==200){
+                        totRows = JSON.parse(ajaxRequest.responseText).count;
+                        console.log(totRows);
+                    }
+                }
+                var params = "dbName="+userData.dbName.trim()+"&tableName="+tableName.trim()+"&userName="+userData.userName.trim()+"&password="+userData.password.trim();
+                ajaxRequest.open("GET", "http://localhost:8080/MegaOmega/webresources/row?"+params, true /*async*/);
+                ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
                 
+                ajaxRequest.send();
             }
             
             function getRecords(){
@@ -93,13 +110,13 @@
                 ajaxRequest.onreadystatechange = function(){
                     if (ajaxRequest.readyState==4 && ajaxRequest.status==200){
                         table = JSON.parse(ajaxRequest.responseText);
-                        console.log(table);
-                        console.log("Base en servicio: "+base);
-                        if(table.length < numR){
+                        if(table.length < numR || base+numR == totRows){
                             document.getElementById("rightArrow").classList.add("dontClickMe");
+                            document.getElementById("rightDArrow").classList.add("dontClickMe");
                         }else{
                             if(document.getElementById("rightArrow").classList.contains("dontClickMe")){
                                 document.getElementById("rightArrow").classList.remove("dontClickMe");
+                                document.getElementById("rightDArrow").classList.remove("dontClickMe");
                             }
                         }
                         var numFields;
@@ -110,7 +127,6 @@
                             fields = Object.keys(table[0]);
                             numFields = fields.length;
                             console.log(Object.keys(table[0]));
-                            
                             theader += "<tr>"
                             for(var i = 0; i < fields.length; i++){
                                 theader += "<th class='tableValue'>" + fields[i] + "</th>"
@@ -141,22 +157,318 @@
                 
                 ajaxRequest.send();
             }
+            
+            function callInsert() {
+                let inputs = document.getElementById('inputsToEdit').childNodes
+                let user = JSON.parse(window.localStorage.getItem("user"))
+                console.log(user)
+                
+                let payload = {
+                    tableName: tableName.trim(),
+                    userName: user.userName.toString().trim(),
+                    dbName: user.dbName.toString().trim(),
+                    password: user.password.toString().trim()
+                }
+                
+                let encodedFields = Object.keys(payload).map(function(k) {
+                    return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])
+                }).join('&')
+                console.log(encodedFields)
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                xhr.onload = function () {
+                        parser = new DOMParser();
+                        var response = JSON.parse(xhr.responseText);
+                        if (xhr.readyState == 4 && xhr.status == "200") {
+                            console.log(response);
+                            let data = []
+                            for(let i = 0; i < inputs.length; i++){
+                                if(inputs[i].nodeName == 'INPUT'){
+                                    data.push(inputs[i])
+                                }
+                            }
+                            let typeApproved = true
+                            let columnValue = null
+                            let columns = {}
+                            for(let i =0; i < response.length; i++){
+                                console.log(response[i].type == "4")
+                                if(response[i].type === "4"){
+                                        try{
+                                            columnValue = parseInt(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "8"){
+                                        try{
+                                            columnValue = parseFloat(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "12"){
+                                        try{
+                                            columnValue = "'"+data[i].value.toString()+"'"
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                
+                                columns[response[i].name] = columnValue
+                                console.log(inputs)
+                                console.log(columns)
+                            }
+                            
+                            encodedFields += "&values=" + JSON.stringify(columns)
+                            
+                            var xhr2 = new XMLHttpRequest();
+                            xhr2.open("POST", "http://localhost:8080/MegaOmega/webresources/record", true);
+                            xhr2.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                            xhr2.onload = function () {
+                                    parser = new DOMParser();
+                                    var response = parser.parseFromString(xhr2.responseText,"text/xml");
+                                    if (xhr2.readyState == 4 && xhr2.status == "200") {
+                                        console.log(response);
+                                    } else {
+                                        console.error(response);
+                                    }
+                            }
+                            
+                            xhr2.send(encodedFields)
+                            
+                            console.log(encodedFields)
+                            
+                        } else {
+                            console.error(response);
+                        }
+                }
+                xhr.send()       
+                totRows = getTotRows();
+                getRecords();
+            }
            
             function callDelete(){
+               let inputs = document.getElementById('inputsToEdit').childNodes
+                let user = JSON.parse(window.localStorage.getItem("user"))
+                console.log(user)
                 
+                let payload = {
+                    tableName: tableName.trim(),
+                    userName: user.userName.toString().trim(),
+                    dbName: user.dbName.toString().trim(),
+                    password: user.password.toString().trim()
+                }
+                let primaryKey = null
+                let encodedFields = Object.keys(payload).map(function(k) {
+                    return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])
+                }).join('&')
+                console.log(encodedFields)
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                xhr.onload = function () {
+                        parser = new DOMParser();
+                        var response = JSON.parse(xhr.responseText);
+                        if (xhr.readyState == 4 && xhr.status == "200") {
+                            console.log(response);
+                            let data = []
+                            for(let i = 0; i < inputs.length; i++){
+                                if(inputs[i].nodeName == 'INPUT'){
+                                    data.push(inputs[i])
+                                }
+                            }
+                            let typeApproved = true
+                            let columnValue = null
+                            let columns = {}
+                            for(let i =0; i < response.length; i++){
+                                
+                                if(response[i].type === "4"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                primaryKey = data[i].value.toString()
+                                            }
+                                            columnValue = parseInt(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "8"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                primaryKey = data[i].value.toString()
+                                            }
+                                            columnValue = parseFloat(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "12"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                primaryKey = data[i].value.toString() + "'"
+                                            }
+                                            columnValue = "'"+data[i].value.toString()+"'"
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                
+                                columns[response[i].name] = columnValue
+                                console.log(inputs)
+                                console.log(columns)
+                            }
+                            
+                            encodedFields += "&values=" + JSON.stringify(columns)
+                            var xhr2 = new XMLHttpRequest();
+                            xhr2.open("DELETE", "http://localhost:8080/MegaOmega/webresources/record/"+primaryKey, true);
+                            xhr2.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                            xhr2.setRequestHeader('tableName:',tableName.toString().trim());
+                            xhr2.setRequestHeader('userName:',user.userName.toString().trim());
+                            xhr2.setRequestHeader('dbName:',user.dbName.toString().trim());
+                            xhr2.setRequestHeader('password:',user.password.toString().trim());
+                            xhr2.onload = function () {
+                                    parser = new DOMParser();
+                                    var response = parser.parseFromString(xhr2.responseText,"text/xml");
+                                    if (xhr2.readyState == 4 && xhr2.status == "200") {
+                                        console.log(response);
+                                    } else {
+                                        console.error(response);
+                                    }
+                            }
+                            
+                            xhr2.send(encodedFields)
+                            
+                            console.log(encodedFields)
+                            
+                        } else {
+                            console.error(response);
+                        }
+                }
+                xhr.send()  
+                totRows = getTotRows();
+                getRecords();
             }
             
             function callUpdate(){
+                let inputs = document.getElementById('inputsToEdit').childNodes
+                let user = JSON.parse(window.localStorage.getItem("user"))
+                console.log(user)
                 
+                let payload = {
+                    tableName: tableName.trim(),
+                    userName: user.userName.toString().trim(),
+                    dbName: user.dbName.toString().trim(),
+                    password: user.password.toString().trim()
+                }
+                
+                let encodedFields = Object.keys(payload).map(function(k) {
+                    return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])
+                }).join('&')
+                console.log(encodedFields)
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                xhr.onload = function () {
+                        parser = new DOMParser();
+                        var response = JSON.parse(xhr.responseText);
+                        if (xhr.readyState == 4 && xhr.status == "200") {
+                            console.log(response);
+                            let data = []
+                            for(let i = 0; i < inputs.length; i++){
+                                if(inputs[i].nodeName == 'INPUT'){
+                                    data.push(inputs[i])
+                                }
+                            }
+                            let typeApproved = true
+                            let columnValue = null
+                            let columns = {}
+                            for(let i =0; i < response.length; i++){
+                                
+                                if(response[i].type === "4"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey=" + data[i].value.toString()
+                                            }
+                                            columnValue = parseInt(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "8"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey=" + data[i].value.toString()
+                                            }
+                                            columnValue = parseFloat(data[i].value).toString()
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                if(response[i].type === "12"){
+                                        try{
+                                            if(response[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey='" + data[i].value.toString() + "'"
+                                            }
+                                            columnValue = "'"+data[i].value.toString()+"'"
+                                        }
+                                        catch(e){
+                                            typeApproved = false
+                                        }
+                                }
+                                
+                                columns[response[i].name] = columnValue
+                                console.log(inputs)
+                                console.log(columns)
+                            }
+                            
+                            encodedFields += "&values=" + JSON.stringify(columns)
+                            
+                            var xhr2 = new XMLHttpRequest();
+                            xhr2.open("PUT", "http://localhost:8080/MegaOmega/webresources/record", true);
+                            xhr2.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+                            xhr2.onload = function () {
+                                    parser = new DOMParser();
+                                    var response = parser.parseFromString(xhr2.responseText,"text/xml");
+                                    if (xhr2.readyState == 4 && xhr2.status == "200") {
+                                        console.log(response);
+                                    } else {
+                                        console.error(response);
+                                    }
+                            }
+                            
+                            xhr2.send(encodedFields)
+                            
+                            console.log(encodedFields)
+                            
+                        } else {
+                            console.error(response);
+                        }
+                }
+                xhr.send()    
             }
             
             function showPrev(){
-                if(base - numR < 0){
+                if(document.getElementById("rightArrow").classList.contains("dontClickMe")){
+                    document.getElementById("rightArrow").classList.remove("dontClickMe");
+                    document.getElementById("rightDArrow").classList.remove("dontClickMe");
+                }
+                if(base - numR <= 0){
                     base = 0;
                     document.getElementById("leftArrow").classList.add("dontClickMe");
+                    document.getElementById("leftDArrow").classList.add("dontClickMe");
                 }else{
                     if(document.getElementById("leftArrow").classList.contains("dontClickMe")){
                         document.getElementById("leftArrow").classList.remove("dontClickMe");
+                        document.getElementById("leftDArrow").classList.remove("dontClickMe");
                     }
                     base -= numR;
                 }
@@ -164,11 +476,40 @@
             }
             
             function showNext(){
-                console.log("Base: "+base)
                 if(document.getElementById("leftArrow").classList.contains("dontClickMe")){
                     document.getElementById("leftArrow").classList.remove("dontClickMe");
+                    document.getElementById("leftDArrow").classList.remove("dontClickMe");
                 }
-                base += numR;
+                if(base < totRows-1){
+                    base += numR;
+                    getRecords();
+                }
+                if(base == totRows){
+                    console.log("igual!")
+                    document.getElementById("rightArrow").classList.add("dontClickMe");
+                    document.getElementById("rightDArrow").classList.add("dontClickMe");
+                }
+            }
+            
+            function showFirst(){
+                if(document.getElementById("rightArrow").classList.contains("dontClickMe")){
+                    document.getElementById("rightArrow").classList.remove("dontClickMe");
+                    document.getElementById("rightDArrow").classList.remove("dontClickMe");
+                }
+                if(!document.getElementById("leftArrow").classList.contains("dontClickMe")){
+                    document.getElementById("leftArrow").classList.add("dontClickMe");
+                    document.getElementById("leftDArrow").classList.add("dontClickMe");
+                }
+                base = 0;
+                getRecords();
+            }
+            
+            function showLast(){
+                if(document.getElementById("leftArrow").classList.contains("dontClickMe")){
+                    document.getElementById("leftArrow").classList.remove("dontClickMe");
+                    document.getElementById("leftDArrow").classList.remove("dontClickMe");
+                }
+                base = totRows - numR;
                 getRecords();
             }
             

@@ -8,6 +8,10 @@
 
 <xs:element name="deleteRecordResponse" type="tns:deleteRecordResponse"/>
 
+<xs:element name="getCount" type="tns:getCount"/>
+
+<xs:element name="getCountResponse" type="tns:getCountResponse"/>
+
 <xs:element name="getFields" type="tns:getFields"/>
 
 <xs:element name="getFieldsResponse" type="tns:getFieldsResponse"/>
@@ -27,6 +31,21 @@
 <xs:element name="updateRecord" type="tns:updateRecord"/>
 
 <xs:element name="updateRecordResponse" type="tns:updateRecordResponse"/>
+
+<xs:complexType name="getCount">
+<xs:sequence>
+<xs:element name="dbName" type="xs:string" minOccurs="0"/>
+<xs:element name="tableName" type="xs:string" minOccurs="0"/>
+<xs:element name="userName" type="xs:string" minOccurs="0"/>
+<xs:element name="password" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getCountResponse">
+<xs:sequence>
+<xs:element name="return" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
 
 <xs:complexType name="updateRecord">
 <xs:sequence>

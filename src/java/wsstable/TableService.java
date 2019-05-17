@@ -53,6 +53,7 @@ public class TableService {
         TableField aux = null;
         JSONObject jaux = null;
         try {
+            System.out.println(fields);
             JSONArray fieldsJ = (JSONArray) parser.parse(fields);
             for( Object f : fieldsJ){
                 if ( f instanceof JSONObject){
@@ -232,6 +233,26 @@ public class TableService {
         }
         return res.toString();
     }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "getCount")
+    public String getCount(
+            @WebParam(name = "dbName") String dbName, 
+            @WebParam(name = "tableName") String tableName, 
+            @WebParam(name = "userName") String userName, 
+            @WebParam(name = "password") String password) {
+        String res = "";
+        try {
+            TableManager t = new TableManager(tableName, dbName, userName, password);
+            res = ""+t.getCount();
+        } catch (Exception ex) {
+            Logger.getLogger(TableService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+    
     
     
     

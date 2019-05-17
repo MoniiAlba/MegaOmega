@@ -32,6 +32,7 @@ public class ApplicationConfig extends Application {
         resources.add(rest.AuthResource.class);
         resources.add(rest.DbResource.class);
         resources.add(rest.RecordResource.class);
+        resources.add(rest.RowResource.class);
         resources.add(rest.TableResource.class);
     }
     
