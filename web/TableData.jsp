@@ -151,7 +151,13 @@
                             theader += "<tr>"
                             for(var i = 0; i < fields.length; i++){
                                 theader += "<th class='tableValue'>" + fields[i] + "</th>"
-                                inputs += fields[i] + "<input style='margin: 5px' type='text' id='input"+fields[i]+"' value='' /> <br>";
+                                var indexH = getHeaderIndex(fields[i]);
+                                if(headers[indexH].isPrimaryKey){
+                                    inputs += "<span class='primaryKey' title='Clave primaria, no modificable, "+ getType(headers[indexH].type)+"'>"+ fields[i] + "</span><input style='margin: 5px' type='text' id='input"+fields[i]+"' value='' /> <br>";
+                                }else{
+                                    inputs += "<span title='"+ getType(headers[indexH].type)+"'>"+ fields[i] + "</span><input style='margin: 5px' type='text' id='input"+fields[i]+"' value='' /> <br>";
+                                }
+                                
                             }
                             theader += "</tr>";
                             //llenar body
@@ -171,7 +177,12 @@
                                 //console.log("Col "+i)
                                 theader += "<th class='tableValue'>" + headers[i].name + "</th>"
                                 //console.log("Header: "+theader)
-                                inputs += headers[i].name + "<input style='margin: 5px' type='text' id='input"+headers[i].name+"' value='' /> <br>";
+                                if(headers[i].isPrimaryKey){
+                                    inputs += "<span class='primaryKey' title='Clave primaria, no modificable, "+ getType(headers[i].type)+"'>"+ headers[i].name + "</span><input style='margin: 5px' type='text' id='input"+headers[i].name+"' value='' /> <br>";
+                                }else{
+                                    inputs += "<span title='"+ getType(headers[i].type)+"'>"+ headers[i].name + "</span><input style='margin: 5px' type='text' id='input"+headers[i].name+"' value='' /> <br>";
+                                }
+                                
                                 //console.log("Inputs: "+inputs)
                             }
                             theader += "</tr>";                                    
@@ -192,6 +203,30 @@
                 ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
                 
                 ajaxRequest.send();
+            }
+            
+            function getType(type){
+                switch (type){
+                    case "4":
+                        return "Int";
+                        break;
+                    
+                    case "12":
+                        return "String";
+                        break;
+                    
+                    case "8":
+                        return "Double";
+                        break;
+                    
+                }
+            }
+            function getHeaderIndex(columnName){
+                for(var i = 0; headers.length; i++){
+                    if(headers[i].name === columnName){
+                        return i;
+                    }
+                }
             }
             
             function callInsert() {
@@ -654,5 +689,12 @@
             pointer-events: none;
             color: gray;
         }
+        
+        .primaryKey{
+            color: #E8553C;
+            text-decoration: underline;
+        }
+        
+       
     </style>
 </html>
