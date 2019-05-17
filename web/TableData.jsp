@@ -325,14 +325,10 @@
                                 console.log(columns)
                             }
                             
-                            encodedFields += "&values=" + JSON.stringify(columns)
+                            encodedFields += "&primaryKey=" + primaryKey
                             var xhr2 = new XMLHttpRequest();
-                            xhr2.open("DELETE", "http://localhost:8080/MegaOmega/webresources/record/"+primaryKey, true);
+                            xhr2.open("POST", "http://localhost:8080/MegaOmega/webresources/row/", true);
                             xhr2.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
-                            xhr2.setRequestHeader('tableName:',tableName.toString().trim());
-                            xhr2.setRequestHeader('userName:',user.userName.toString().trim());
-                            xhr2.setRequestHeader('dbName:',user.dbName.toString().trim());
-                            xhr2.setRequestHeader('password:',user.password.toString().trim());
                             xhr2.onload = function () {
                                     parser = new DOMParser();
                                     var response = parser.parseFromString(xhr2.responseText,"text/xml");
