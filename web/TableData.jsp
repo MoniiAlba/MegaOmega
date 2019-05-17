@@ -315,59 +315,63 @@
                 }).join('&')
                 console.log(encodedFields)
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
-                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
-                xhr.onload = function () {
-                        parser = new DOMParser();
-                        var response = JSON.parse(xhr.responseText);
-                        if (xhr.readyState == 4 && xhr.status == "200") {
-                            console.log(response);
+//                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+//                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+//                xhr.onload = function () {
+//                        parser = new DOMParser();
+//                        var response = JSON.parse(xhr.responseText);
+//                        if (xhr.readyState == 4 && xhr.status == "200") {
+//                            console.log(response);
                             let data = []
-                            for(let i = 0; i < inputs.length; i++){
-                                if(inputs[i].nodeName == 'INPUT'){
-                                    data.push(inputs[i])
-                                }
+                            for(var i = 0; i < headers.length; i++){
+                                var nomInput = "input"+headers[i].name
+                                data.push(document.getElementById(nomInput).value)
                             }
+//                            for(let i = 0; i < inputs.length; i++){
+//                                if(inputs[i].nodeName == 'INPUT'){
+//                                    data.push(inputs[i])
+//                                }
+//                            }
                             let typeApproved = true
                             let columnValue = null
                             let columns = {}
-                            for(let i =0; i < response.length; i++){
+                            for(let i =0; i < headers.length; i++){
                                 
-                                if(response[i].type === "4"){
+                                if(headers[i].type === "4"){
                                         try{
-                                            if(response[i].isPrimaryKey){
-                                                primaryKey = data[i].value.toString()
+                                            if(headers[i].isPrimaryKey){
+                                                primaryKey = data[i]
                                             }
-                                            columnValue = parseInt(data[i].value).toString()
+                                            columnValue = parseInt(data[i]).toString()
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
-                                if(response[i].type === "8"){
+                                if(headers[i].type === "8"){
                                         try{
-                                            if(response[i].isPrimaryKey){
-                                                primaryKey = data[i].value.toString()
+                                            if(headers[i].isPrimaryKey){
+                                                primaryKey = data[i]
                                             }
-                                            columnValue = parseFloat(data[i].value).toString()
+                                            columnValue = parseFloat(data[i]).toString()
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
-                                if(response[i].type === "12"){
+                                if(headers[i].type === "12"){
                                         try{
-                                            if(response[i].isPrimaryKey){
-                                                primaryKey = "'" + data[i].value.toString() + "'"
+                                            if(headers[i].isPrimaryKey){
+                                                primaryKey = "'" + data[i] + "'"
                                             }
-                                            columnValue = "'"+data[i].value.toString()+"'"
+                                            columnValue = "'"+data[i]+"'"
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
                                 
-                                columns[response[i].name] = columnValue
+                                columns[headers[i].name] = columnValue
                                 console.log(inputs)
                                 console.log(columns)
                             }
@@ -393,18 +397,18 @@
                             
                             console.log(encodedFields)
                             
-                        } else {
-                            console.error(response);
-                        }
-                }
-                xhr.send()  
+//                        } else {
+//                            console.error(response);
+//                        }
+//                }
+//                xhr.send()  
                 
             }
             
             function callUpdate(){
                 let inputs = document.getElementById('inputsToEdit').childNodes
                 let user = JSON.parse(window.localStorage.getItem("user"))
-                console.log(user)
+//                console.log(user)
                 
                 let payload = {
                     tableName: tableName.trim(),
@@ -416,61 +420,65 @@
                 let encodedFields = Object.keys(payload).map(function(k) {
                     return encodeURIComponent(k) + '=' + encodeURIComponent(payload[k])
                 }).join('&')
-                console.log(encodedFields)
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
-                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
-                xhr.onload = function () {
-                        parser = new DOMParser();
-                        var response = JSON.parse(xhr.responseText);
-                        if (xhr.readyState == 4 && xhr.status == "200") {
-                            console.log(response);
+//                console.log(encodedFields)
+//                var xhr = new XMLHttpRequest();
+//                xhr.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+encodedFields, true);
+//                xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
+//                xhr.onload = function () {
+//                        parser = new DOMParser();
+//                        var response = JSON.parse(xhr.responseText);
+//                        if (xhr.readyState == 4 && xhr.status == "200") {
+//                            console.log(response);
                             let data = []
-                            for(let i = 0; i < inputs.length; i++){
-                                if(inputs[i].nodeName == 'INPUT'){
-                                    data.push(inputs[i])
-                                }
+                            for(var i = 0; i < headers.length; i++){
+                                var nomInput = "input"+headers[i].name
+                                data.push(document.getElementById(nomInput).value)
                             }
+//                            for(let i = 0; i < inputs.length; i++){
+//                                if(inputs[i].nodeName == 'INPUT'){
+//                                    data.push(inputs[i])
+//                                }
+//                            }
                             let typeApproved = true
                             let columnValue = null
                             let columns = {}
-                            for(let i =0; i < response.length; i++){
+                            for(let i =0; i < headers.length; i++){
                                 
-                                if(response[i].type === "4"){
+                                if(headers[i].type === "4"){
                                         try{
-                                            if(response[i].isPrimaryKey){
-                                                encodedFields += "&primaryKey=" + data[i].value.toString()
+                                            if(headers[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey=" + data[i]
                                             }
-                                            columnValue = parseInt(data[i].value).toString()
+                                            columnValue = parseInt(data[i]).toString()
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
-                                if(response[i].type === "8"){
+                                if(headers[i].type === "8"){
                                         try{
-                                            if(response[i].isPrimaryKey){
-                                                encodedFields += "&primaryKey=" + data[i].value.toString()
+                                            if(headers[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey=" + data[i]
                                             }
-                                            columnValue = parseFloat(data[i].value).toString()
+                                            columnValue = parseFloat(data[i]).toString()
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
-                                if(response[i].type === "12"){
+                                if(headers[i].type === "12"){
                                         try{
-                                            if(response[i].isPrimaryKey){
-                                                encodedFields += "&primaryKey='" + data[i].value.toString() + "'"
+                                            if(headers[i].isPrimaryKey){
+                                                encodedFields += "&primaryKey='" + data[i] + "'"
                                             }
-                                            columnValue = "'"+data[i].value.toString()+"'"
+                                            columnValue = "'"+data[i]+"'"
                                         }
                                         catch(e){
                                             typeApproved = false
                                         }
                                 }
                                 
-                                columns[response[i].name] = columnValue
+                                columns[headers[i].name] = columnValue
                                 console.log(inputs)
                                 console.log(columns)
                             }
@@ -497,11 +505,11 @@
                             
                             console.log(encodedFields)
                             
-                        } else {
-                            console.error(response);
-                        }
-                }
-                xhr.send()    
+//                        } else {
+//                            console.error(response);
+//                        }
+//                }
+//                xhr.send()    
             }
             
             function showPrev(){
