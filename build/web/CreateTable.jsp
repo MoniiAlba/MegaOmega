@@ -35,6 +35,10 @@
             <input type="button" value="Eliminar columna" onclick="deleteColumn()">
             <input type="button" value="Crear tabla" onclick="createTable()">
         </div>
+        
+        <form action="TableData.jsp">
+            <input type="submit" value="Ir al perfil" />
+        </form>
         <script>
             var fields= [];
             var numCols = 0;
@@ -161,8 +165,10 @@
                             var response = parser.parseFromString(xhr.responseText,"text/xml");
                             if (xhr.readyState == 4 && xhr.status == "200") {
                                 console.log(response);
+                                alert("Tabla creada exitosamente :)");
                             } else {
                                 console.error(response);
+                                alert("Tabla no se creó :(");
                             }
                     }
                     

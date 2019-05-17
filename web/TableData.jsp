@@ -95,7 +95,7 @@
                 }
                 var params = "dbName="+userData.dbName.trim()+"&tableName="+tableName.trim()+"&userName="+userData.userName.trim()+"&password="+userData.password.trim();
                 ajaxRequest.open("GET", "http://localhost:8080/MegaOmega/webresources/row?"+params, true /*async*/);
-                ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
+                //ajaxRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
                 
                 ajaxRequest.send();
             }
@@ -143,7 +143,40 @@
                                 tbody += "</tr>";
                             }
                         }else{
-                            tbody = "No hay datos para mostrar";
+                            console.log("No hay datos");
+                            tbody = "<tr class='tableRow'>No hay datos para mostrar</tr>";
+                            var ajaxRequest2;
+                            if (window.XMLHttpRequest){
+                                ajaxRequest2=new XMLHttpRequest(); // IE7+, Firefox, Chrome, Opera, Safari
+                            } else {
+                                ajaxRequest2=new ActiveXObject("Microsoft.XMLHTTP"); // IE6, IE5
+                            }
+                            ajaxRequest2.onreadystatechange = function(){
+                                if (ajaxRequest2.readyState==4 && ajaxRequest2.status==200){
+                                    console.log("Regresa del segundo get");
+                                    var rows = JSON.parse(ajaxRequest2.responseText);
+                                    console.log(rows)
+                                    theader += "<tr>"
+                                    for(var i = 0; i < rows.length; i++){
+                                        console.log("Col "+i)
+                                        theader += "<th class='tableValue'>" + rows[i].name + "</th>"
+                                        console.log("Header: "+theader)
+                                        inputs += rows[i].name + "<input style='margin: 5px' type='text' id='input"+rows[i].name+"' value='' /> <br>";
+                                        console.log("Inputs: "+inputs)
+                                    }
+                                    theader += "</tr>";                                    
+                                    document.getElementById("tableFields").innerHTML = theader;
+                                    document.getElementById("tableRows").innerHTML = tbody;
+                                    document.getElementById("inputsToEdit").innerHTML = inputs;
+                                }
+                            }
+                            var params = "dbName="+userData.dbName.trim()+"&tableName="+tableName.trim()+"&userName="+userData.userName.trim()+"&password="+userData.password.trim();
+                            //var params = "dbName=prueba&tableName=MUSICACOOL&userName=prueba&password=prueba";
+                            console.log(params);
+                            ajaxRequest2.open("GET", "http://localhost:8080/MegaOmega/webresources/table?"+params, true /*async*/);
+                            //ajaxRequest2.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); 
+                            ajaxRequest2.send();
+                            
                         }
                         
                         document.getElementById("tableFields").innerHTML = theader;
@@ -188,10 +221,12 @@
                                     data.push(inputs[i])
                                 }
                             }
+                            console.log("Data: " + data)
                             let typeApproved = true
                             let columnValue = null
                             let columns = {}
                             for(let i =0; i < response.length; i++){
+                                console.log("VALOR: "+data[i].value)
                                 console.log(response[i].type == "4")
                                 if(response[i].type === "4"){
                                         try{
@@ -224,7 +259,7 @@
                             }
                             
                             encodedFields += "&values=" + JSON.stringify(columns)
-                            
+                            console.log("Para insertar: "+encodedFields);
                             var xhr2 = new XMLHttpRequest();
                             xhr2.open("POST", "http://localhost:8080/MegaOmega/webresources/record", true);
                             xhr2.setRequestHeader('Content-type','application/x-www-form-urlencoded; charset=utf-8');
@@ -233,8 +268,11 @@
                                     var response = parser.parseFromString(xhr2.responseText,"text/xml");
                                     if (xhr2.readyState == 4 && xhr2.status == "200") {
                                         console.log(response);
+                                        totRows = getTotRows();
+                                        getRecords();
                                     } else {
                                         console.error(response);
+                                        alert("Error al insertar tupla :(");
                                     }
                             }
                             
@@ -244,11 +282,11 @@
                             
                         } else {
                             console.error(response);
+                            alert("Error al insertar tupla :(");
                         }
                 }
                 xhr.send()       
-                totRows = getTotRows();
-                getRecords();
+                
             }
            
             function callDelete(){
@@ -311,7 +349,7 @@
                                 if(response[i].type === "12"){
                                         try{
                                             if(response[i].isPrimaryKey){
-                                                primaryKey = data[i].value.toString() + "'"
+                                                primaryKey = "'" + data[i].value.toString() + "'"
                                             }
                                             columnValue = "'"+data[i].value.toString()+"'"
                                         }
@@ -334,8 +372,11 @@
                                     var response = parser.parseFromString(xhr2.responseText,"text/xml");
                                     if (xhr2.readyState == 4 && xhr2.status == "200") {
                                         console.log(response);
+                                        totRows = getTotRows();
+                                        getRecords();
                                     } else {
                                         console.error(response);
+                                        alert("Error al eliminar tupla :(");
                                     }
                             }
                             
@@ -348,8 +389,7 @@
                         }
                 }
                 xhr.send()  
-                totRows = getTotRows();
-                getRecords();
+                
             }
             
             function callUpdate(){
@@ -436,8 +476,11 @@
                                     var response = parser.parseFromString(xhr2.responseText,"text/xml");
                                     if (xhr2.readyState == 4 && xhr2.status == "200") {
                                         console.log(response);
+                                        totRows = getTotRows();
+                                        getRecords();
                                     } else {
                                         console.error(response);
+                                        alert("Error al editar datos :(");
                                     }
                             }
                             
